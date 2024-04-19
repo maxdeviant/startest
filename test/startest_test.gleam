@@ -15,5 +15,13 @@ pub fn main() {
       1
       |> expect.to_equal(2)
     }),
+    it("is Ok", fn() {
+      Error("oops")
+      |> expect.to_be_ok
+    }),
+    it("is Error", fn() {
+      Ok(42)
+      |> expect.to_be_error
+    }),
   ])
 }
