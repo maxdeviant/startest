@@ -1,5 +1,6 @@
 import gleam/io
 import gleam/string
+import gleam_community/ansi
 import startest/reporter.{type Reporter, Reporter}
 import startest/test_case.{Failed, Passed, Skipped}
 
@@ -8,11 +9,13 @@ pub fn new() -> Reporter {
     let test_case = executed_test.test_case
 
     case executed_test.outcome {
-      Passed -> io.println("✅ " <> test_case.name)
+      Passed -> io.println(ansi.green("✓") <> " " <> test_case.name)
       Failed(err) -> {
-        io.println("❌ " <> test_case.name <> ": " <> string.inspect(err))
+        io.println(
+          ansi.red("×") <> " " <> test_case.name <> ": " <> string.inspect(err),
+        )
       }
-      Skipped -> io.println("~ " <> test_case.name)
+      Skipped -> io.println(ansi.gray("~") <> " " <> test_case.name)
     }
   })
 }
