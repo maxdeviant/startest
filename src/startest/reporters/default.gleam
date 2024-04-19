@@ -46,48 +46,77 @@ fn try_decode(exception: Exception) {
       err
   }
 
-  use dict <- try(
-    err
-    |> dynamic.dict(dynamic.dynamic, dynamic.dynamic)
-    |> result.nil_error,
-  )
+  case dynamic.classify(err) {
+    "Dict" -> {
+      use dict <- try(
+        err
+        |> dynamic.dict(dynamic.dynamic, dynamic.dynamic)
+        |> result.nil_error,
+      )
 
-  use module <- try(
-    dict
-    |> dict.get(dynamic.from(Module))
-    |> result.then(fn(value) {
-      value
-      |> dynamic.string
-      |> result.nil_error
-    }),
-  )
-  use function <- try(
-    dict
-    |> dict.get(dynamic.from(Function))
-    |> result.then(fn(value) {
-      value
-      |> dynamic.string
-      |> result.nil_error
-    }),
-  )
-  use line <- try(
-    dict
-    |> dict.get(dynamic.from(Line))
-    |> result.then(fn(value) {
-      value
-      |> dynamic.int
-      |> result.nil_error
-    }),
-  )
-  use message <- try(
-    dict
-    |> dict.get(dynamic.from(Message))
-    |> result.then(fn(value) {
-      value
-      |> dynamic.string
-      |> result.nil_error
-    }),
-  )
+      use module <- try(
+        dict
+        |> dict.get(dynamic.from(Module))
+        |> result.then(fn(value) {
+          value
+          |> dynamic.string
+          |> result.nil_error
+        }),
+      )
+      use function <- try(
+        dict
+        |> dict.get(dynamic.from(Function))
+        |> result.then(fn(value) {
+          value
+          |> dynamic.string
+          |> result.nil_error
+        }),
+      )
+      use line <- try(
+        dict
+        |> dict.get(dynamic.from(Line))
+        |> result.then(fn(value) {
+          value
+          |> dynamic.int
+          |> result.nil_error
+        }),
+      )
+      use message <- try(
+        dict
+        |> dict.get(dynamic.from(Message))
+        |> result.then(fn(value) {
+          value
+          |> dynamic.string
+          |> result.nil_error
+        }),
+      )
 
-  Ok(PanicInfo(module, function, line, message))
+      Ok(PanicInfo(module, function, line, message))
+    }
+    "Object" -> {
+      use module <- try(
+        err
+        |> dynamic.field("module", dynamic.string)
+        |> result.nil_error,
+      )
+      use function <- try(
+        err
+        |> dynamic.field("fn", dynamic.string)
+        |> result.nil_error,
+      )
+      use line <- try(
+        err
+        |> dynamic.field("line", dynamic.int)
+        |> result.nil_error,
+      )
+      use message <- try(
+        err
+        |> dynamic.field("message", dynamic.string)
+        |> result.nil_error,
+      )
+
+      Ok(PanicInfo(module, function, line, message))
+    }
+    _ -> Error(Nil)
+  }
 }
