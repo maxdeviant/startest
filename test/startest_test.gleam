@@ -1,12 +1,19 @@
-import gleeunit
-import gleeunit/should
+import startest.{it, xit}
+import startest/expect
 
 pub fn main() {
-  gleeunit.main()
-}
-
-// gleeunit test functions end in `_test`
-pub fn hello_world_test() {
-  1
-  |> should.equal(1)
+  startest.run_tests([
+    it("passes", fn() {
+      2 + 2
+      |> expect.to_equal(4)
+    }),
+    it("fails", fn() {
+      3 + 4
+      |> expect.to_equal(6)
+    }),
+    xit("skipped", fn() {
+      1
+      |> expect.to_equal(2)
+    }),
+  ])
 }
