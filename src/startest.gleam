@@ -2,6 +2,7 @@ import exception
 import gleam/int
 import gleam/io
 import gleam/list
+import gleam/string
 import startest/internal/process
 
 pub opaque type TestCase {
@@ -56,8 +57,7 @@ fn run_test(test_case: TestCase) -> TestOutcome {
           Passed
         }
         Error(err) -> {
-          io.print("❌ " <> test_case.name <> ": ")
-          io.debug(err)
+          io.println("❌ " <> test_case.name <> ": " <> string.inspect(err))
           Failed
         }
       }
