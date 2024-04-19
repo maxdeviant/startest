@@ -2,8 +2,9 @@ import exception
 import gleam/int
 import gleam/io
 import gleam/list
+import startest/internal/process
 
-pub type TestCase {
+pub opaque type TestCase {
   TestCase(name: String, body: fn() -> Nil, skipped: Bool)
 }
 
@@ -33,10 +34,12 @@ pub fn run_tests(tests: List(TestCase)) {
     test_results
     |> list.any(fn(outcome) { outcome == Failed })
 
-  case has_any_failures {
-    True -> panic as "Tests failed"
-    False -> Nil
+  let exit_code = case has_any_failures {
+    True -> 1
+    False -> 0
   }
+
+  process.exit(exit_code)
 }
 
 fn run_test(test_case: TestCase) -> TestOutcome {

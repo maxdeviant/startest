@@ -11,7 +11,7 @@ pub fn main() {
       3 + 4
       |> expect.to_equal(6)
     }),
-    xit("skipped", fn() {
+    xit("is skipped", fn() {
       1
       |> expect.to_equal(2)
     }),
