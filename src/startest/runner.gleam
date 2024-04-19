@@ -7,8 +7,13 @@ import startest/reporters/default as default_reporter
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
+import startest/test_tree.{type TestTree}
 
-pub fn run_tests(tests: List(Test)) {
+pub fn run_tests(tests: List(TestTree)) {
+  let tests =
+    tests
+    |> list.flat_map(fn(tree) { test_tree.all_tests(tree) })
+
   let test_count = list.length(tests)
   io.println("Running " <> int.to_string(test_count) <> " tests")
 
@@ -16,7 +21,12 @@ pub fn run_tests(tests: List(Test)) {
 
   let executed_tests =
     tests
-    |> list.map(fn(test_case) { ExecutedTest(test_case, run_test(test_case)) })
+    |> list.map(fn(pair) {
+      let test_case =
+        test_case.Test(pair.0, { pair.1 }.body, { pair.1 }.skipped)
+
+      ExecutedTest(test_case, run_test(test_case))
+    })
 
   executed_tests
   |> list.each(fn(executed_test) { reporter.report(executed_test) })
