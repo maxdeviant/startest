@@ -1,4 +1,3 @@
-import exception
 import gleam/int
 import gleam/io
 import gleam/list
@@ -7,6 +6,7 @@ import startest/reporter.{type Reporter}
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
+import startest/test_failure
 import startest/test_tree.{type TestTree}
 
 pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
@@ -48,8 +48,7 @@ fn run_test(test_case: Test) -> TestOutcome {
   case test_case.skipped {
     True -> Skipped
     False -> {
-      let result = exception.rescue(test_case.body)
-      case result {
+      case test_failure.rescue(test_case.body) {
         Ok(Nil) -> Passed
         Error(err) -> Failed(err)
       }

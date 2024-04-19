@@ -1,4 +1,4 @@
-import exception.{type Exception}
+import startest/test_failure.{type TestFailure}
 
 /// A test case.
 pub type Test {
@@ -8,7 +8,7 @@ pub type Test {
 /// The outcome of a `Test` that has been run.
 pub type TestOutcome {
   Passed
-  Failed(exception: Exception)
+  Failed(TestFailure)
   Skipped
 }
 

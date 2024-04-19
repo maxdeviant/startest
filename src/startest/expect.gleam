@@ -1,21 +1,22 @@
 import gleam/option.{type Option, None, Some}
 import gleam/string
-import gleam_community/ansi
-
-const blank_line = "\n\n"
+import startest/assertion_error.{AssertionError}
 
 pub fn to_equal(actual: a, expected expected: a) -> Nil {
   case actual == expected {
     True -> Nil
     False ->
-      panic as string.concat([
-        "Expected ",
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to equal ",
+          string.inspect(expected),
+        ]),
         string.inspect(actual),
-        " to equal ",
         string.inspect(expected),
-        blank_line,
-        show_diff(string.inspect(actual), string.inspect(expected)),
-      ])
+      )
+      |> assertion_error.raise
   }
 }
 
@@ -23,14 +24,17 @@ pub fn to_not_equal(actual: a, expected expected: a) -> Nil {
   case actual != expected {
     True -> Nil
     False ->
-      panic as string.concat([
-        "Expected ",
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to not equal ",
+          string.inspect(expected),
+        ]),
         string.inspect(actual),
-        " to not equal ",
         string.inspect(expected),
-        blank_line,
-        show_diff(string.inspect(actual), string.inspect(expected)),
-      ])
+      )
+      |> assertion_error.raise
   }
 }
 
@@ -48,13 +52,12 @@ pub fn to_be_ok(actual: Result(a, err)) -> a {
   case actual {
     Ok(value) -> value
     Error(_) ->
-      panic as string.concat([
-        "Expected ",
+      AssertionError(
+        string.concat(["Expected ", string.inspect(actual), " to be Ok"]),
         string.inspect(actual),
-        " to be Ok",
-        blank_line,
-        show_diff(string.inspect(actual), "Ok(_)"),
-      ])
+        "Ok(_)",
+      )
+      |> assertion_error.raise
   }
 }
 
@@ -62,13 +65,12 @@ pub fn to_be_error(actual: Result(a, err)) -> err {
   case actual {
     Error(error) -> error
     Ok(_) ->
-      panic as string.concat([
-        "Expected ",
+      AssertionError(
+        string.concat(["Expected ", string.inspect(actual), " to be Error"]),
         string.inspect(actual),
-        " to be Error",
-        blank_line,
-        show_diff(string.inspect(actual), "Error(_)"),
-      ])
+        "Error(_)",
+      )
+      |> assertion_error.raise
   }
 }
 
@@ -76,13 +78,12 @@ pub fn to_be_some(actual: Option(a)) -> a {
   case actual {
     Some(value) -> value
     None ->
-      panic as string.concat([
-        "Expected ",
+      AssertionError(
+        string.concat(["Expected ", string.inspect(actual), " to be Some"]),
         string.inspect(actual),
-        " to be Some",
-        blank_line,
-        show_diff(string.inspect(actual), "Some(_)"),
-      ])
+        "Some(_)",
+      )
+      |> assertion_error.raise
   }
 }
 
@@ -90,24 +91,11 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
   case actual {
     None -> Nil
     Some(_) ->
-      panic as string.concat([
-        "Expected ",
+      AssertionError(
+        string.concat(["Expected ", string.inspect(actual), " to be None"]),
         string.inspect(actual),
-        " to be None",
-        blank_line,
-        show_diff(string.inspect(actual), "None"),
-      ])
+        "None",
+      )
+      |> assertion_error.raise
   }
-}
-
-fn show_diff(actual: String, expected: String) -> String {
-  string.concat([
-    ansi.green("- Expected"),
-    "\n",
-    ansi.red("+ Received"),
-    "\n\n",
-    ansi.green("- " <> expected),
-    "\n",
-    ansi.red("+ " <> actual),
-  ])
 }
