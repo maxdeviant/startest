@@ -3,21 +3,19 @@ import gleam/int
 import gleam/io
 import gleam/list
 import startest/internal/process
-import startest/reporters/default as default_reporter
+import startest/reporter.{type Reporter}
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
 import startest/test_tree.{type TestTree}
 
-pub fn run_tests(tests: List(TestTree)) {
+pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
   let tests =
     tests
     |> list.flat_map(fn(tree) { test_tree.all_tests(tree) })
 
   let test_count = list.length(tests)
   io.println("Running " <> int.to_string(test_count) <> " tests")
-
-  let reporter = default_reporter.new()
 
   let executed_tests =
     tests
@@ -28,8 +26,11 @@ pub fn run_tests(tests: List(TestTree)) {
       ExecutedTest(test_case, run_test(test_case))
     })
 
-  executed_tests
-  |> list.each(fn(executed_test) { reporter.report(executed_test) })
+  reporters
+  |> list.each(fn(reporter) {
+    executed_tests
+    |> list.each(fn(executed_test) { reporter.report(executed_test) })
+  })
 
   let has_any_failures =
     executed_tests

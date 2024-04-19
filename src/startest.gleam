@@ -1,3 +1,4 @@
+import startest/reporter.{type Reporter}
 import startest/runner
 import startest/test_case.{type Test, Test}
 import startest/test_tree.{type TestTree, Suite}
@@ -16,6 +17,6 @@ pub fn xit(name: String, _body: fn() -> Nil) -> TestTree {
   |> test_tree.Test
 }
 
-pub fn run_tests(tests: List(TestTree)) -> Nil {
-  runner.run_tests(tests)
+pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) -> Nil {
+  runner.run_tests(tests, reporters)
 }
