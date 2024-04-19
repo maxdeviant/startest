@@ -1,7 +1,7 @@
 import startest.{describe, it}
 import startest/expect
 
-pub fn expect_test() {
+pub fn suite() {
   describe("startest/expect", [
     describe("to_be_ok", [
       describe("given an Ok", [
@@ -11,13 +11,5 @@ pub fn expect_test() {
         }),
       ]),
     ]),
-    it("is Ok", fn() {
-      Error("oops")
-      |> expect.to_be_ok
-    }),
-    it("is Error", fn() {
-      Ok(42)
-      |> expect.to_be_error
-    }),
   ])
 }

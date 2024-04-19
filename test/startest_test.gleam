@@ -1,13 +1,13 @@
 import startest.{it, xit}
 import startest/expect
-import startest/expect_test.{expect_test}
+import startest/expect_test
 import startest/reporters/default as default_reporter
 
 pub fn main() {
   let reporters = [default_reporter.new()]
 
   [
-    expect_test(),
+    expect_test.suite(),
     it("passes", fn() {
       2 + 2
       |> expect.to_equal(4)
