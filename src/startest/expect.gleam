@@ -1,3 +1,4 @@
+import exception
 import gleam/option.{type Option, None, Some}
 import gleam/string
 import startest/assertion_error.{AssertionError}
@@ -95,6 +96,32 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
         string.concat(["Expected ", string.inspect(actual), " to be None"]),
         string.inspect(actual),
         "None",
+      )
+      |> assertion_error.raise
+  }
+}
+
+pub fn to_throw(f: fn() -> a) -> Nil {
+  case exception.rescue(f) {
+    Error(_) -> Nil
+    Ok(value) ->
+      AssertionError(
+        string.concat(["Expected ", string.inspect(f), " to throw an error"]),
+        string.inspect(value),
+        string.inspect(Nil),
+      )
+      |> assertion_error.raise
+  }
+}
+
+pub fn to_not_throw(f: fn() -> a) -> a {
+  case exception.rescue(f) {
+    Ok(value) -> value
+    Error(exception) ->
+      AssertionError(
+        string.concat(["Expected ", string.inspect(f), " to not throw an error"]),
+        string.inspect(Nil),
+        string.inspect(exception),
       )
       |> assertion_error.raise
   }

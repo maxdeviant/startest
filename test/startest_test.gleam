@@ -12,15 +12,15 @@ pub fn main() {
       2 + 2
       |> expect.to_equal(4)
     }),
-    it("fails", fn() {
+    xit("fails", fn() {
       3 + 4
       |> expect.to_equal(6)
     }),
-    it("is Ok", fn() {
+    xit("is Ok", fn() {
       Error("oops")
       |> expect.to_be_ok
     }),
-    it("is Error", fn() {
+    xit("is Error", fn() {
       Ok(42)
       |> expect.to_be_error
     }),
