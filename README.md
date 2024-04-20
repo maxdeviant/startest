@@ -15,7 +15,6 @@ gleam add --dev startest
 
 ```gleam
 import startest.{describe, it}
-import startest/config
 import startest/expect
 
 pub fn main() {
@@ -29,7 +28,7 @@ pub fn main() {
       ]),
     ]),
   ]
-  |> startest.run(config.default())
+  |> startest.run(startest.default_config())
 }
 ```
 

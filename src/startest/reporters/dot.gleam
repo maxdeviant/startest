@@ -1,6 +1,6 @@
 import gleam/io
 import gleam_community/ansi
-import startest/reporter.{type Reporter, Reporter}
+import startest/reporters.{type Reporter, Reporter}
 import startest/test_case.{Failed, Passed, Skipped}
 
 pub fn new() -> Reporter {

@@ -4,10 +4,11 @@ import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import gleam_community/ansi
 import startest/config.{type Config}
+import startest/context.{Context}
 import startest/internal/process
 import startest/logger.{Logger}
+import startest/reporter
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
@@ -15,7 +16,7 @@ import startest/test_failure
 import startest/test_tree.{type TestTree}
 
 pub fn run_tests(tests: List(TestTree), config: Config) {
-  let logger = Logger
+  let ctx = Context(config, logger: Logger)
 
   let started_at = birl.utc_now()
 
@@ -33,7 +34,7 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
     })
 
   let test_count = list.length(tests)
-  logger.log(logger, "Running " <> int.to_string(test_count) <> " tests")
+  logger.log(ctx.logger, "Running " <> int.to_string(test_count) <> " tests")
 
   let execution_started_at = birl.utc_now()
 
@@ -66,56 +67,27 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
         Passed | Skipped -> Error(Nil)
       }
     })
-  let failed_test_count = list.length(failed_tests)
-  let has_any_failures = failed_test_count > 0
-
-  case has_any_failures {
-    True -> {
-      logger.log(logger, "")
-      logger.log(
-        logger,
-        ansi.black(ansi.bg_bright_red(
-          " Failed Tests: " <> int.to_string(failed_test_count) <> " ",
-        )),
-      )
-      logger.log(logger, "")
-
-      failed_tests
-      |> list.each(fn(failed_test) {
-        let #(test_case, failure) = failed_test
-
-        logger.log(
-          logger,
-          ansi.black(ansi.bg_bright_red(" FAIL "))
-            <> " "
-            <> test_case.name
-            <> "\n"
-            <> test_failure.to_string(failure),
-        )
-      })
-    }
-    False -> Nil
-  }
+  reporter.report_summary(ctx, failed_tests)
 
   let total_duration =
     birl.utc_now()
     |> birl.difference(started_at)
 
   logger.log(
-    logger,
+    ctx.logger,
     "Ran "
       <> int.to_string(test_count)
       <> " tests in "
       <> duration_to_string(total_duration),
   )
   logger.log(
-    logger,
+    ctx.logger,
     "Execution time: " <> duration_to_string(execution_duration),
   )
 
-  let exit_code = case has_any_failures {
-    True -> 1
-    False -> 0
+  let exit_code = case list.is_empty(failed_tests) {
+    True -> 0
+    False -> 1
   }
 
   process.exit(exit_code)

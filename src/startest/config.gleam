@@ -1,6 +1,5 @@
-import gleam/option.{type Option, None}
-import startest/reporter.{type Reporter}
-import startest/reporters/default as default_reporter
+import gleam/option.{type Option}
+import startest/reporters.{type Reporter}
 
 pub type Config {
   Config(
@@ -9,11 +8,6 @@ pub type Config {
     /// The pattern to use to filter test names.
     test_name_pattern: Option(String),
   )
-}
-
-/// Returns the default Startest config.
-pub fn default() -> Config {
-  Config(reporters: [default_reporter.new()], test_name_pattern: None)
 }
 
 pub fn with_test_name_pattern(

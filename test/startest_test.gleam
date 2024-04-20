@@ -1,5 +1,4 @@
 import startest.{describe, it, xit}
-import startest/config
 import startest/expect
 import startest/expect_test
 import startest/test_case.{Test}
@@ -7,7 +6,7 @@ import startest/test_tree
 
 pub fn main() {
   [describe("startest", [it_tests(), xit_tests()]), expect_test.suite()]
-  |> startest.run(config.default())
+  |> startest.run(startest.default_config())
 }
 
 fn it_tests() {

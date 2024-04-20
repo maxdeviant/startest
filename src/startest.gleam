@@ -1,5 +1,7 @@
+import gleam/option.{None}
 import startest/cli
-import startest/config.{type Config}
+import startest/config.{type Config, Config}
+import startest/reporters/default as default_reporter
 import startest/test_case.{type Test, Test}
 import startest/test_tree.{type TestTree, Suite}
 
@@ -31,4 +33,9 @@ pub fn xit(name: String, _body: fn() -> Nil) -> TestTree {
 /// Runs Startest with the provided list of tests.
 pub fn run(tests: List(TestTree), config: Config) {
   cli.run(tests, config)
+}
+
+/// Returns the default Startest config.
+pub fn default_config() -> Config {
+  Config(reporters: [default_reporter.new()], test_name_pattern: None)
 }
