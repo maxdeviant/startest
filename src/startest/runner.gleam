@@ -1,3 +1,5 @@
+import birl
+import birl/duration
 import gleam/int
 import gleam/io
 import gleam/list
@@ -11,12 +13,16 @@ import startest/test_failure
 import startest/test_tree.{type TestTree}
 
 pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
+  let started_at = birl.utc_now()
+
   let tests =
     tests
     |> list.flat_map(fn(tree) { test_tree.all_tests(tree) })
 
   let test_count = list.length(tests)
   io.println("Running " <> int.to_string(test_count) <> " tests")
+
+  let execution_started_at = birl.utc_now()
 
   let executed_tests =
     tests
@@ -26,6 +32,10 @@ pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
 
       ExecutedTest(test_case, run_test(test_case))
     })
+
+  let execution_duration =
+    birl.utc_now()
+    |> birl.difference(execution_started_at)
 
   reporters
   |> list.each(fn(reporter) {
@@ -72,6 +82,18 @@ pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
     False -> Nil
   }
 
+  let total_duration =
+    birl.utc_now()
+    |> birl.difference(started_at)
+
+  io.println(
+    "Ran "
+    <> int.to_string(test_count)
+    <> " tests in "
+    <> duration_to_string(total_duration),
+  )
+  io.println("Execution time: " <> duration_to_string(execution_duration))
+
   let exit_code = case has_any_failures {
     True -> 1
     False -> 0
@@ -89,5 +111,28 @@ fn run_test(test_case: Test) -> TestOutcome {
         Error(err) -> Failed(err)
       }
     }
+  }
+}
+
+fn duration_to_string(duration: duration.Duration) -> String {
+  let parts = duration.decompose(duration)
+
+  case parts {
+    [#(microseconds, duration.MicroSecond)] ->
+      int.to_string(microseconds) <> "µs"
+    [#(milliseconds, duration.MilliSecond), #(_, duration.MicroSecond)] ->
+      int.to_string(milliseconds) <> "ms"
+    [
+      #(seconds, duration.Second),
+      #(_, duration.MilliSecond),
+      #(_, duration.MicroSecond),
+    ] -> int.to_string(seconds) <> "s"
+    [
+      #(minutes, duration.Minute),
+      #(_, duration.Second),
+      #(_, duration.MilliSecond),
+      #(_, duration.MicroSecond),
+    ] -> int.to_string(minutes) <> "m"
+    _ -> "too long"
   }
 }
