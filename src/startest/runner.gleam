@@ -1,6 +1,7 @@
 import gleam/int
 import gleam/io
 import gleam/list
+import gleam_community/ansi
 import startest/internal/process
 import startest/reporter.{type Reporter}
 import startest/test_case.{
@@ -34,9 +35,42 @@ pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
     reporter.finished()
   })
 
-  let has_any_failures =
+  let failed_tests =
     executed_tests
-    |> list.any(fn(executed_test) { test_case.is_failed(executed_test) })
+    |> list.filter_map(fn(executed_test) {
+      case executed_test.outcome {
+        Failed(failure) -> Ok(#(executed_test.test_case, failure))
+        Passed | Skipped -> Error(Nil)
+      }
+    })
+  let failed_test_count = list.length(failed_tests)
+  let has_any_failures = failed_test_count > 0
+
+  case has_any_failures {
+    True -> {
+      io.println("")
+      io.println(
+        ansi.black(ansi.bg_bright_red(
+          " Failed Tests: " <> int.to_string(failed_test_count) <> " ",
+        )),
+      )
+      io.println("")
+
+      failed_tests
+      |> list.each(fn(failed_test) {
+        let #(test_case, failure) = failed_test
+
+        io.println(
+          ansi.black(ansi.bg_bright_red(" FAIL "))
+          <> " "
+          <> test_case.name
+          <> "\n"
+          <> test_failure.to_string(failure),
+        )
+      })
+    }
+    False -> Nil
+  }
 
   let exit_code = case has_any_failures {
     True -> 1
