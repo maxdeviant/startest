@@ -1,33 +1,41 @@
-import startest.{it, xit}
+import startest.{describe, it, xit}
 import startest/expect
 import startest/expect_test
 import startest/reporters/default as default_reporter
+import startest/test_case.{Test}
+import startest/test_tree
 
 pub fn main() {
   let reporters = [default_reporter.new()]
 
-  [
-    expect_test.suite(),
-    it("passes", fn() {
-      2 + 2
-      |> expect.to_equal(4)
-    }),
-    xit("fails", fn() {
-      3 + 4
-      |> expect.to_equal(6)
-    }),
-    xit("is Ok", fn() {
-      Error("oops")
-      |> expect.to_be_ok
-    }),
-    xit("is Error", fn() {
-      Ok(42)
-      |> expect.to_be_error
-    }),
-    xit("is skipped", fn() {
-      1
-      |> expect.to_equal(2)
-    }),
-  ]
+  [describe("startest", [it_tests(), xit_tests()]), expect_test.suite()]
   |> startest.run_tests(reporters)
+}
+
+fn it_tests() {
+  describe("it", [
+    it("defines a test", fn() {
+      let assert test_tree.Test(test_case) = it("tests something", fn() { Nil })
+
+      test_case.name
+      |> expect.to_equal("tests something")
+
+      test_case.skipped
+      |> expect.to_be_false
+    }),
+  ])
+}
+
+fn xit_tests() {
+  describe("xit", [
+    it("defines a skipped test", fn() {
+      let assert test_tree.Test(test_case) = xit("always fails", fn() { panic })
+
+      test_case.name
+      |> expect.to_equal("always fails")
+
+      test_case.skipped
+      |> expect.to_be_true
+    }),
+  ])
 }
