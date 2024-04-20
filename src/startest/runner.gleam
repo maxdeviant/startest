@@ -3,6 +3,8 @@ import birl/duration
 import gleam/int
 import gleam/io
 import gleam/list
+import gleam/option.{None, Some}
+import gleam/string
 import gleam_community/ansi
 import startest/config.{type Config}
 import startest/internal/process
@@ -18,6 +20,15 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
   let tests =
     tests
     |> list.flat_map(fn(tree) { test_tree.all_tests(tree) })
+    |> list.filter(fn(pair) {
+      let #(test_name, _) = pair
+
+      case config.test_name_pattern {
+        Some(test_name_pattern) ->
+          string.contains(does: test_name, contain: test_name_pattern)
+        None -> True
+      }
+    })
 
   let test_count = list.length(tests)
   io.println("Running " <> int.to_string(test_count) <> " tests")

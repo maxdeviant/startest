@@ -7,7 +7,7 @@ import startest/test_tree
 
 pub fn main() {
   [describe("startest", [it_tests(), xit_tests()]), expect_test.suite()]
-  |> startest.run_tests(config.default())
+  |> startest.run(config.default())
 }
 
 fn it_tests() {

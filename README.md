@@ -29,7 +29,7 @@ pub fn main() {
       ]),
     ]),
   ]
-  |> startest.run_tests(config.default())
+  |> startest.run(config.default())
 }
 ```
 

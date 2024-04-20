@@ -1,5 +1,5 @@
+import startest/cli
 import startest/config.{type Config}
-import startest/runner
 import startest/test_case.{type Test, Test}
 import startest/test_tree.{type TestTree, Suite}
 
@@ -28,7 +28,7 @@ pub fn xit(name: String, _body: fn() -> Nil) -> TestTree {
   |> test_tree.Test
 }
 
-/// Runs the given tests and reports results using the provided list of `Reporter`s.
-pub fn run_tests(tests: List(TestTree), config: Config) -> Nil {
-  runner.run_tests(tests, config)
+/// Runs Startest with the provided list of tests.
+pub fn run(tests: List(TestTree), config: Config) {
+  cli.run(tests, config)
 }
