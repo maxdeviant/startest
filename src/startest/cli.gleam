@@ -5,6 +5,8 @@ import gleam/option.{None, Some}
 import glint
 import glint/flag
 import startest/config.{type Config}
+import startest/context.{Context}
+import startest/logger.{Logger}
 import startest/runner
 import startest/test_tree.{type TestTree}
 
@@ -26,7 +28,9 @@ pub fn run(tests: List(TestTree), config: Config) {
           filter -> Some(filter)
         })
 
-      runner.run_tests(tests, config)
+      let ctx = Context(config, logger: Logger)
+
+      runner.run_tests(ctx, tests)
     })
       |> glint.flag(test_name_filter, test_name_filter_flag()),
   )

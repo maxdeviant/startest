@@ -4,10 +4,9 @@ import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import startest/config.{type Config}
-import startest/context.{Context}
+import startest/context.{type Context}
 import startest/internal/process
-import startest/logger.{Logger}
+import startest/logger
 import startest/reporter
 import startest/reporters.{ReporterContext}
 import startest/test_case.{
@@ -16,9 +15,7 @@ import startest/test_case.{
 import startest/test_failure
 import startest/test_tree.{type TestTree}
 
-pub fn run_tests(tests: List(TestTree), config: Config) {
-  let ctx = Context(config, logger: Logger)
-
+pub fn run_tests(ctx: Context, tests: List(TestTree)) {
   let started_at = birl.utc_now()
 
   let tests =
@@ -27,7 +24,7 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
     |> list.filter(fn(pair) {
       let #(test_name, _) = pair
 
-      case config.test_name_pattern {
+      case ctx.config.test_name_pattern {
         Some(test_name_pattern) ->
           string.contains(does: test_name, contain: test_name_pattern)
         None -> True
@@ -53,7 +50,7 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
     |> birl.difference(execution_started_at)
 
   let reporter_ctx = ReporterContext(logger: ctx.logger)
-  config.reporters
+  ctx.config.reporters
   |> list.each(fn(reporter) {
     executed_tests
     |> list.each(fn(executed_test) {

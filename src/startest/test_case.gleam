@@ -16,10 +16,3 @@ pub type TestOutcome {
 pub type ExecutedTest {
   ExecutedTest(test_case: Test, outcome: TestOutcome)
 }
-
-pub fn is_failed(executed_test: ExecutedTest) -> Bool {
-  case executed_test.outcome {
-    Failed(_) -> True
-    Passed | Skipped -> False
-  }
-}
