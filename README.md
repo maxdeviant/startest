@@ -15,12 +15,10 @@ gleam add --dev startest
 
 ```gleam
 import startest.{describe, it}
+import startest/config
 import startest/expect
-import startest/reporters/default as default_reporter
 
 pub fn main() {
-  let reporters = [default_reporter.new()]
-
   [
     describe("My Project", [
       describe("2 + 2", [
@@ -31,7 +29,7 @@ pub fn main() {
       ]),
     ]),
   ]
-  |> startest.run_tests(reporters)
+  |> startest.run_tests(config.default())
 }
 ```
 

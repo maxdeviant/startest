@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added dot reporter.
 
+### Changed
+
+- Changed `startest.run_tests` to take a `Config` instead of a `List(Reporter)`.
+
 ## [0.1.0] - 2024-04-19
 
 - Initial release.

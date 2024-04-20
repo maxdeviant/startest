@@ -4,15 +4,15 @@ import gleam/int
 import gleam/io
 import gleam/list
 import gleam_community/ansi
+import startest/config.{type Config}
 import startest/internal/process
-import startest/reporter.{type Reporter}
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
 import startest/test_failure
 import startest/test_tree.{type TestTree}
 
-pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
+pub fn run_tests(tests: List(TestTree), config: Config) {
   let started_at = birl.utc_now()
 
   let tests =
@@ -37,7 +37,7 @@ pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
     birl.utc_now()
     |> birl.difference(execution_started_at)
 
-  reporters
+  config.reporters
   |> list.each(fn(reporter) {
     executed_tests
     |> list.each(fn(executed_test) { reporter.report(executed_test) })

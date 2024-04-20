@@ -1,4 +1,4 @@
-import startest/reporter.{type Reporter}
+import startest/config.{type Config}
 import startest/runner
 import startest/test_case.{type Test, Test}
 import startest/test_tree.{type TestTree, Suite}
@@ -29,6 +29,6 @@ pub fn xit(name: String, _body: fn() -> Nil) -> TestTree {
 }
 
 /// Runs the given tests and reports results using the provided list of `Reporter`s.
-pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) -> Nil {
-  runner.run_tests(tests, reporters)
+pub fn run_tests(tests: List(TestTree), config: Config) -> Nil {
+  runner.run_tests(tests, config)
 }

@@ -1,15 +1,13 @@
 import startest.{describe, it, xit}
+import startest/config
 import startest/expect
 import startest/expect_test
-import startest/reporters/default as default_reporter
 import startest/test_case.{Test}
 import startest/test_tree
 
 pub fn main() {
-  let reporters = [default_reporter.new()]
-
   [describe("startest", [it_tests(), xit_tests()]), expect_test.suite()]
-  |> startest.run_tests(reporters)
+  |> startest.run_tests(config.default())
 }
 
 fn it_tests() {
