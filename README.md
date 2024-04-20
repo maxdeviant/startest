@@ -3,23 +3,36 @@
 [![Package Version](https://img.shields.io/hexpm/v/startest)](https://hex.pm/packages/startest)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/startest/)
 
+🌠 A testing framework to help you shoot for the stars.
+
+## Installation
+
 ```sh
-gleam add startest
+gleam add --dev startest
 ```
+
 ```gleam
-import startest
+import startest.{describe, it}
+import startest/expect
+import startest/reporters/default as default_reporter
 
 pub fn main() {
-  // TODO: An example of the project in use
+  let reporters = [default_reporter.new()]
+
+  [
+    describe("My Project", [
+      describe("2 + 2", [
+        it("equals 4", fn() {
+          2 + 2
+          |> expect.to_equal(4)
+        }),
+      ]),
+    ]),
+  ]
+  |> startest.run_tests(reporters)
 }
 ```
 
-Further documentation can be found at <https://hexdocs.pm/startest>.
+## Targets
 
-## Development
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-```
+`startest` supports both targets: Erlang and JavaScript.
