@@ -30,6 +30,8 @@ pub fn run_tests(tests: List(TestTree), reporters: List(Reporter)) {
   |> list.each(fn(reporter) {
     executed_tests
     |> list.each(fn(executed_test) { reporter.report(executed_test) })
+
+    reporter.finished()
   })
 
   let has_any_failures =
