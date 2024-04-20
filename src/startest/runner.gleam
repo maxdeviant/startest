@@ -9,6 +9,7 @@ import startest/context.{Context}
 import startest/internal/process
 import startest/logger.{Logger}
 import startest/reporter
+import startest/reporters.{ReporterContext}
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
@@ -51,12 +52,15 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
     birl.utc_now()
     |> birl.difference(execution_started_at)
 
+  let reporter_ctx = ReporterContext(logger: ctx.logger)
   config.reporters
   |> list.each(fn(reporter) {
     executed_tests
-    |> list.each(fn(executed_test) { reporter.report(executed_test) })
+    |> list.each(fn(executed_test) {
+      reporter.report(reporter_ctx, executed_test)
+    })
 
-    reporter.finished()
+    reporter.finished(reporter_ctx)
   })
 
   let failed_tests =
