@@ -6,8 +6,8 @@ import glint
 import glint/flag
 import startest/config.{type Config}
 import startest/context.{Context}
+import startest/internal/runner
 import startest/logger.{Logger}
-import startest/runner
 import startest/test_tree.{type TestTree}
 
 /// Runs the Startest CLI.

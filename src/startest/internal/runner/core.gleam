@@ -1,3 +1,5 @@
+//// The core test runner implementation.
+
 import birl
 import birl/duration
 import gleam/int
