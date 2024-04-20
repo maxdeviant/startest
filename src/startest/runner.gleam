@@ -1,13 +1,13 @@
 import birl
 import birl/duration
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import gleam_community/ansi
 import startest/config.{type Config}
 import startest/internal/process
+import startest/logger.{Logger}
 import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
@@ -15,6 +15,8 @@ import startest/test_failure
 import startest/test_tree.{type TestTree}
 
 pub fn run_tests(tests: List(TestTree), config: Config) {
+  let logger = Logger
+
   let started_at = birl.utc_now()
 
   let tests =
@@ -31,7 +33,7 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
     })
 
   let test_count = list.length(tests)
-  io.println("Running " <> int.to_string(test_count) <> " tests")
+  logger.log(logger, "Running " <> int.to_string(test_count) <> " tests")
 
   let execution_started_at = birl.utc_now()
 
@@ -69,24 +71,26 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
 
   case has_any_failures {
     True -> {
-      io.println("")
-      io.println(
+      logger.log(logger, "")
+      logger.log(
+        logger,
         ansi.black(ansi.bg_bright_red(
           " Failed Tests: " <> int.to_string(failed_test_count) <> " ",
         )),
       )
-      io.println("")
+      logger.log(logger, "")
 
       failed_tests
       |> list.each(fn(failed_test) {
         let #(test_case, failure) = failed_test
 
-        io.println(
+        logger.log(
+          logger,
           ansi.black(ansi.bg_bright_red(" FAIL "))
-          <> " "
-          <> test_case.name
-          <> "\n"
-          <> test_failure.to_string(failure),
+            <> " "
+            <> test_case.name
+            <> "\n"
+            <> test_failure.to_string(failure),
         )
       })
     }
@@ -97,13 +101,17 @@ pub fn run_tests(tests: List(TestTree), config: Config) {
     birl.utc_now()
     |> birl.difference(started_at)
 
-  io.println(
+  logger.log(
+    logger,
     "Ran "
-    <> int.to_string(test_count)
-    <> " tests in "
-    <> duration_to_string(total_duration),
+      <> int.to_string(test_count)
+      <> " tests in "
+      <> duration_to_string(total_duration),
   )
-  io.println("Execution time: " <> duration_to_string(execution_duration))
+  logger.log(
+    logger,
+    "Execution time: " <> duration_to_string(execution_duration),
+  )
 
   let exit_code = case has_any_failures {
     True -> 1
