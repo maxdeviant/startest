@@ -1,8 +1,11 @@
+//// Assertions to be used in tests.
+
 import exception
 import gleam/option.{type Option, None, Some}
 import gleam/string
 import startest/assertion_error.{AssertionError}
 
+/// Asserts that the given value is equal to the expected value.
 pub fn to_equal(actual: a, expected expected: a) -> Nil {
   case actual == expected {
     True -> Nil
@@ -21,6 +24,7 @@ pub fn to_equal(actual: a, expected expected: a) -> Nil {
   }
 }
 
+/// Asserts that the given value is not equal to the expected value.
 pub fn to_not_equal(actual: a, expected expected: a) -> Nil {
   case actual != expected {
     True -> Nil
@@ -39,16 +43,19 @@ pub fn to_not_equal(actual: a, expected expected: a) -> Nil {
   }
 }
 
+/// Asserts that the given value is `True`.
 pub fn to_be_true(actual: Bool) -> Nil {
   actual
   |> to_equal(True)
 }
 
+/// Asserts that the given value is `False`.
 pub fn to_be_false(actual: Bool) -> Nil {
   actual
   |> to_equal(False)
 }
 
+/// Asserts that the given value is `Ok(_)`.
 pub fn to_be_ok(actual: Result(a, err)) -> a {
   case actual {
     Ok(value) -> value
@@ -62,6 +69,7 @@ pub fn to_be_ok(actual: Result(a, err)) -> a {
   }
 }
 
+/// Asserts that the given value is `Error(_)`.
 pub fn to_be_error(actual: Result(a, err)) -> err {
   case actual {
     Error(error) -> error
@@ -75,6 +83,7 @@ pub fn to_be_error(actual: Result(a, err)) -> err {
   }
 }
 
+/// Asserts that the given value is `Some(_)`.
 pub fn to_be_some(actual: Option(a)) -> a {
   case actual {
     Some(value) -> value
@@ -88,6 +97,7 @@ pub fn to_be_some(actual: Option(a)) -> a {
   }
 }
 
+/// Asserts that the given value is `None`.
 pub fn to_be_none(actual: Option(a)) -> Nil {
   case actual {
     None -> Nil
@@ -101,6 +111,7 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
   }
 }
 
+/// Asserts that the given function throws an error.
 pub fn to_throw(f: fn() -> a) -> Nil {
   case exception.rescue(f) {
     Error(_) -> Nil
@@ -114,6 +125,7 @@ pub fn to_throw(f: fn() -> a) -> Nil {
   }
 }
 
+/// Asserts that the given function does not throw an error.
 pub fn to_not_throw(f: fn() -> a) -> a {
   case exception.rescue(f) {
     Ok(value) -> value
