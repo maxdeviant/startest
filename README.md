@@ -11,6 +11,8 @@
 gleam add --dev startest
 ```
 
+## Usage
+
 ```gleam
 import startest.{describe, it}
 import startest/expect
