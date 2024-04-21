@@ -2,9 +2,13 @@
 
 import argv
 import gleam/option.{None, Some}
+import gleam/result
+import gleam/string
+import gleam_community/ansi
 import glint
 import startest/config.{type Config}
 import startest/context.{Context}
+import startest/internal/gleam_toml
 import startest/internal/runner
 import startest/logger.{Logger}
 
@@ -14,8 +18,27 @@ pub fn run(config: Config) {
   |> glint.name("gleam test --")
   |> glint.pretty_help(glint.default_pretty_help())
   |> glint.add(at: [], do: {
+    let package_name =
+      gleam_toml.read_name()
+      |> result.unwrap("my_project")
+
+    use <- glint.command_help(
+      string.concat([
+        "Runs the tests.",
+        "\n\n",
+        "Accepts zero or more filepath patterns as `ARGS` to filter down which tests are run. For example:",
+        "\n\n",
+        "  - `",
+        ansi.cyan("gleam test -- example"),
+        "` will run the tests in all files that have \"example\" in their name",
+        "\n",
+        "  - `",
+        ansi.cyan("gleam test -- test/" <> package_name <> "_test.gleam"),
+        "` will run just the tests in that specific file",
+      ]),
+    )
     use test_name_filter <- glint.flag(
-      "filter",
+      "test-name-filter",
       glint.string()
         |> glint.default("")
         |> glint.flag_help(
