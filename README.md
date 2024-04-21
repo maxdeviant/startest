@@ -67,7 +67,12 @@ If you're coming from [`gleeunit`](https://hexdocs.pm/gleeunit), follow these st
 | `should.be_none`   | `expect.to_be_none`                   |
 | `should.fail`      | `expect.to_be_true(False)` or `panic` |
 
-> This conversion can typically be done with a find/replace from `should.` to `expect.to_`.
+This conversion can typically be done with a find/replace:
+
+```diff
+- should.
++ expect.to_
+```
 
 ## Targets
 
