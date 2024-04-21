@@ -1,3 +1,4 @@
+import bigben/clock
 import birl
 import birl/duration.{type Duration}
 import gleam/dynamic.{type Dynamic}
@@ -94,7 +95,7 @@ fn identify_tests_in_file(
   test_file: TestSourceFile,
   ctx: Context,
 ) -> Result(TestFile, Nil) {
-  let started_at = birl.utc_now()
+  let started_at = clock.now(ctx.clock)
 
   let #(standalone_tests, test_functions) =
     test_file.tests
@@ -130,7 +131,7 @@ fn identify_tests_in_file(
     [] -> Error(Nil)
     tests -> {
       let collect_duration =
-        birl.utc_now()
+        clock.now(ctx.clock)
         |> birl.difference(started_at)
 
       Ok(TestFile(

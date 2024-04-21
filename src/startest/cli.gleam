@@ -1,6 +1,7 @@
 //// The Startest command line interface (CLI).
 
 import argv
+import bigben/clock
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
@@ -59,7 +60,7 @@ pub fn run(config: Config) {
           filter -> Some(filter)
         })
 
-      let ctx = Context(config, logger: Logger)
+      let ctx = Context(config, clock: clock.new(), logger: Logger)
 
       runner.run_tests(ctx)
     })

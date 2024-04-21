@@ -1,5 +1,6 @@
 //// The core test runner implementation.
 
+import bigben/clock
 import birl
 import birl/duration
 import gleam/int
@@ -19,7 +20,7 @@ import startest/test_failure
 import startest/test_tree
 
 pub fn run_tests(tests: List(TestFile), ctx: Context) {
-  let started_at = birl.utc_now()
+  let started_at = clock.now(ctx.clock)
 
   let total_collect_duration =
     tests
@@ -51,7 +52,7 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
   let test_count = list.length(tests)
   logger.log(ctx.logger, "Running " <> int.to_string(test_count) <> " tests")
 
-  let execution_started_at = birl.utc_now()
+  let execution_started_at = clock.now(ctx.clock)
 
   let executed_tests =
     tests
@@ -65,7 +66,7 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
     })
 
   let execution_duration =
-    birl.utc_now()
+    clock.now(ctx.clock)
     |> birl.difference(execution_started_at)
 
   let reporter_ctx = ReporterContext(logger: ctx.logger)
@@ -90,7 +91,7 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
   reporter.report_summary(ctx, failed_tests)
 
   let total_duration =
-    birl.utc_now()
+    clock.now(ctx.clock)
     |> birl.difference(started_at)
 
   logger.log(
