@@ -12,7 +12,7 @@ gleam_community_ansi = ">= 1.4.0 and < 2.0.0"
 gleam_erlang = ">= 0.25.0 and < 1.0.0"
 gleam_javascript = ">= 0.8.0 and < 1.0.0"
 gleam_stdlib = ">= 0.34.0 and < 2.0.0"
-glint = ">= 0.18.0 and < 1.0.0"
+glint = ">= 1.0.0-rc1 and < 1.0.0"
 simplifile = ">= 1.7.0 and < 2.0.0"
 tom = ">= 0.3.0 and < 1.0.0"
 
