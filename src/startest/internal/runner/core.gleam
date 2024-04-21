@@ -2,7 +2,6 @@
 
 import bigben/clock
 import birl
-import birl/duration
 import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
@@ -19,17 +18,9 @@ import startest/test_case.{
 import startest/test_failure
 import startest/test_tree
 
-pub fn run_tests(tests: List(TestFile), ctx: Context) {
-  let started_at = clock.now(ctx.clock)
-
-  let total_collect_duration =
-    tests
-    |> list.fold(duration.micro_seconds(0), fn(acc, test_file) {
-      duration.add(acc, test_file.collect_duration)
-    })
-
+pub fn run_tests(test_files: List(TestFile), ctx: Context) {
   let tests =
-    tests
+    test_files
     |> list.flat_map(fn(test_file) {
       test_file.tests
       |> list.flat_map(test_tree.all_tests)
@@ -69,6 +60,8 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
     clock.now(ctx.clock)
     |> birl.difference(execution_started_at)
 
+  let reporting_started_at = clock.now(ctx.clock)
+
   let reporter_ctx = ReporterContext(logger: ctx.logger)
   ctx.config.reporters
   |> list.each(fn(reporter) {
@@ -80,6 +73,10 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
     reporter.finished(reporter_ctx)
   })
 
+  let reporting_duration =
+    clock.now(ctx.clock)
+    |> birl.difference(reporting_started_at)
+
   let failed_tests =
     executed_tests
     |> list.filter_map(fn(executed_test) {
@@ -88,29 +85,13 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
         Passed | Skipped -> Error(Nil)
       }
     })
-  reporter.report_summary(ctx, failed_tests)
-
-  let total_duration =
-    clock.now(ctx.clock)
-    |> birl.difference(started_at)
-
-  logger.log(
-    ctx.logger,
-    "Collected "
-      <> int.to_string(test_count)
-      <> " tests in "
-      <> duration_to_string(total_collect_duration),
-  )
-  logger.log(
-    ctx.logger,
-    "Ran "
-      <> int.to_string(test_count)
-      <> " tests in "
-      <> duration_to_string(total_duration),
-  )
-  logger.log(
-    ctx.logger,
-    "Execution time: " <> duration_to_string(execution_duration),
+  reporter.report_summary(
+    ctx,
+    test_files,
+    executed_tests,
+    failed_tests,
+    execution_duration,
+    reporting_duration,
   )
 
   let exit_code = case list.is_empty(failed_tests) {
@@ -130,28 +111,5 @@ fn run_test(test_case: Test) -> TestOutcome {
         Error(err) -> Failed(err)
       }
     }
-  }
-}
-
-fn duration_to_string(duration: duration.Duration) -> String {
-  let parts = duration.decompose(duration)
-
-  case parts {
-    [#(microseconds, duration.MicroSecond)] ->
-      int.to_string(microseconds) <> "µs"
-    [#(milliseconds, duration.MilliSecond), #(_, duration.MicroSecond)] ->
-      int.to_string(milliseconds) <> "ms"
-    [
-      #(seconds, duration.Second),
-      #(_, duration.MilliSecond),
-      #(_, duration.MicroSecond),
-    ] -> int.to_string(seconds) <> "s"
-    [
-      #(minutes, duration.Minute),
-      #(_, duration.Second),
-      #(_, duration.MilliSecond),
-      #(_, duration.MicroSecond),
-    ] -> int.to_string(minutes) <> "m"
-    _ -> "too long"
   }
 }

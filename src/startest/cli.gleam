@@ -60,7 +60,15 @@ pub fn run(config: Config) {
           filter -> Some(filter)
         })
 
-      let ctx = Context(config, clock: clock.new(), logger: Logger)
+      let clock = clock.new()
+
+      let ctx =
+        Context(
+          config,
+          clock: clock,
+          logger: Logger,
+          started_at: clock.now(clock),
+        )
 
       runner.run_tests(ctx)
     })
