@@ -16,17 +16,15 @@ import startest/context.{type Context}
 import startest/internal/runner/core
 @target(javascript)
 import startest/locator
-@target(javascript)
-import startest/test_tree.{type TestTree}
 
 @target(javascript)
-pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Promise(Nil) {
+pub fn run_tests(ctx: Context) -> Promise(Nil) {
   let assert Ok(test_files) = locator.locate_test_files()
 
   // TODO: Retrieve package name from `gleam.toml`.
   let package_name = "startest"
 
-  use test_functions <- promise.await(
+  use tests <- promise.await(
     test_files
     |> list.map(fn(filepath) {
       let js_module_path =
@@ -40,7 +38,8 @@ pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Promise(Nil) {
     |> promise.map(locator.identify_tests(_, ctx)),
   )
 
-  core.run_tests(ctx, list.concat([tests, test_functions]))
+  tests
+  |> core.run_tests(ctx)
   |> promise.resolve
 }
 

@@ -8,10 +8,9 @@ import startest/config.{type Config}
 import startest/context.{Context}
 import startest/internal/runner
 import startest/logger.{Logger}
-import startest/test_tree.{type TestTree}
 
 /// Runs the Startest CLI.
-pub fn run(tests: List(TestTree), config: Config) {
+pub fn run(config: Config) {
   glint.new()
   |> glint.with_name("Startest")
   |> glint.with_pretty_help(glint.default_pretty_help())
@@ -30,7 +29,7 @@ pub fn run(tests: List(TestTree), config: Config) {
 
       let ctx = Context(config, logger: Logger)
 
-      runner.run_tests(ctx, tests)
+      runner.run_tests(ctx)
     })
       |> glint.flag(test_name_filter, test_name_filter_flag()),
   )

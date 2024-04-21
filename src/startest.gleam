@@ -31,8 +31,8 @@ pub fn xit(name: String, _body: fn() -> Nil) -> TestTree {
 }
 
 /// Runs Startest with the provided list of tests.
-pub fn run(tests: List(TestTree), config: Config) {
-  cli.run(tests, config)
+pub fn run(config: Config) {
+  cli.run(config)
 }
 
 /// Returns the default Startest config.

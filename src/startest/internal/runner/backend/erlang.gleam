@@ -14,14 +14,12 @@ import startest/context.{type Context}
 import startest/internal/runner/core
 @target(erlang)
 import startest/locator
-@target(erlang)
-import startest/test_tree.{type TestTree}
 
 @target(erlang)
-pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Nil {
+pub fn run_tests(ctx: Context) -> Nil {
   let assert Ok(test_files) = locator.locate_test_files()
 
-  let test_functions =
+  let tests =
     test_files
     |> list.map(fn(filepath) {
       let erlang_module_name =
@@ -35,7 +33,8 @@ pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Nil {
     |> list.flatten
     |> locator.identify_tests(ctx)
 
-  core.run_tests(ctx, list.concat([tests, test_functions]))
+  tests
+  |> core.run_tests(ctx)
 }
 
 @target(erlang)

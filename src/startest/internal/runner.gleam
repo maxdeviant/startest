@@ -5,22 +5,17 @@ import startest/context.{type Context}
 import startest/internal/runner/backend/erlang as erlang_runner
 @target(javascript)
 import startest/internal/runner/backend/javascript as javascript_runner
-import startest/test_tree.{type TestTree}
 
 @target(erlang)
-pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Nil {
-  erlang_runner.run_tests(ctx, tests)
+pub fn run_tests(ctx: Context) -> Nil {
+  erlang_runner.run_tests(ctx)
 }
 
 @target(javascript)
-pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Nil {
-  do_run_tests(ctx, tests, javascript_runner.run_tests)
+pub fn run_tests(ctx: Context) -> Nil {
+  do_run_tests(ctx, javascript_runner.run_tests)
 }
 
 @target(javascript)
 @external(javascript, "../../startest_ffi.mjs", "do_run_tests")
-fn do_run_tests(
-  ctx: Context,
-  tests: List(TestTree),
-  run: fn(Context, List(TestTree)) -> Promise(Nil),
-) -> Nil
+fn do_run_tests(ctx: Context, run: fn(Context) -> Promise(Nil)) -> Nil

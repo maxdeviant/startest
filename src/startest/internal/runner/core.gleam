@@ -17,7 +17,7 @@ import startest/test_case.{
 import startest/test_failure
 import startest/test_tree.{type TestTree}
 
-pub fn run_tests(ctx: Context, tests: List(TestTree)) {
+pub fn run_tests(tests: List(TestTree), ctx: Context) {
   let started_at = birl.utc_now()
 
   let tests =

@@ -4,8 +4,7 @@ import startest/test_case.{Test}
 import startest/test_tree
 
 pub fn main() {
-  []
-  |> startest.run(startest.default_config())
+  startest.run(startest.default_config())
 }
 
 pub fn some_test() {

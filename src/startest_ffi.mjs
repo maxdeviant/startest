@@ -16,6 +16,6 @@ export async function get_exports(module_path) {
   ]);
 }
 
-export function do_run_tests(ctx, tests, run) {
-  return run(ctx, tests);
+export function do_run_tests(ctx, run) {
+  return run(ctx);
 }
