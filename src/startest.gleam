@@ -1,4 +1,5 @@
 import gleam/option.{None}
+import gleam/regex
 import startest/cli
 import startest/config.{type Config, Config}
 import startest/reporters/default as default_reporter
@@ -37,5 +38,13 @@ pub fn run(config: Config) {
 
 /// Returns the default Startest config.
 pub fn default_config() -> Config {
-  Config(reporters: [default_reporter.new()], test_name_pattern: None)
+  let assert Ok(discover_describe_tests_pattern) = regex.from_string("_tests$")
+  let assert Ok(discover_standalone_tests_pattern) = regex.from_string("_test$")
+
+  Config(
+    reporters: [default_reporter.new()],
+    discover_describe_tests_pattern: discover_describe_tests_pattern,
+    discover_standalone_tests_pattern: discover_standalone_tests_pattern,
+    test_name_pattern: None,
+  )
 }

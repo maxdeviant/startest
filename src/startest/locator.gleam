@@ -1,5 +1,6 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/list
+import gleam/regex
 import gleam/result.{try}
 import gleam/string
 import simplifile
@@ -31,7 +32,7 @@ pub fn identify_tests(
 ) -> List(TestTree) {
   let #(standalone_tests, test_functions) =
     test_functions
-    |> list.partition(is_standalone_test)
+    |> list.partition(is_standalone_test(_, ctx))
   let standalone_tests =
     standalone_tests
     |> list.map(fn(named_fn) {
@@ -48,7 +49,7 @@ pub fn identify_tests(
 
   let #(test_suites, _test_functions) =
     test_functions
-    |> list.partition(is_test_suite)
+    |> list.partition(is_test_suite(_, ctx))
   let test_suites =
     test_suites
     |> list.filter_map(fn(named_fn) {
@@ -65,16 +66,16 @@ pub fn identify_tests(
   list.concat([test_suites, standalone_tests])
 }
 
-fn is_standalone_test(named_fn: NamedFunction) -> Bool {
+fn is_standalone_test(named_fn: NamedFunction, ctx: Context) -> Bool {
   let #(function_name, _) = named_fn
 
   function_name
-  |> string.ends_with("_test")
+  |> regex.check(with: ctx.config.discover_standalone_tests_pattern)
 }
 
-fn is_test_suite(named_fn: NamedFunction) -> Bool {
+fn is_test_suite(named_fn: NamedFunction, ctx: Context) -> Bool {
   let #(function_name, _) = named_fn
 
   function_name
-  |> string.ends_with("_tests")
+  |> regex.check(with: ctx.config.discover_describe_tests_pattern)
 }
