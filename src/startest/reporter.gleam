@@ -4,6 +4,7 @@ import birl/duration.{type Duration}
 import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
+import gleam/result
 import gleam/string
 import gleam_community/ansi
 import startest/context.{type Context}
@@ -74,6 +75,14 @@ pub fn report_summary(
     None, None -> ""
   }
 
+  let started_at =
+    ctx.started_at
+    |> birl.set_offset(
+      birl.now()
+      |> birl.get_offset,
+    )
+    |> result.unwrap(ctx.started_at)
+
   let total_collect_duration =
     test_files
     |> list.fold(duration.micro_seconds(0), fn(acc, test_file) {
@@ -94,8 +103,7 @@ pub fn report_summary(
     ctx.logger,
     label("Started at: ")
       <> {
-      // TODO: Show in local time.
-      ctx.started_at
+      started_at
       |> birl.to_naive_time_string
       |> string.slice(0, string.length("HH:MM:SS"))
     },
