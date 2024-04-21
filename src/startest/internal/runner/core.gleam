@@ -21,6 +21,12 @@ import startest/test_tree
 pub fn run_tests(tests: List(TestFile), ctx: Context) {
   let started_at = birl.utc_now()
 
+  let total_collect_duration =
+    tests
+    |> list.fold(duration.micro_seconds(0), fn(acc, test_file) {
+      duration.add(acc, test_file.collect_duration)
+    })
+
   let tests =
     tests
     |> list.flat_map(fn(test_file) {
@@ -87,6 +93,13 @@ pub fn run_tests(tests: List(TestFile), ctx: Context) {
     birl.utc_now()
     |> birl.difference(started_at)
 
+  logger.log(
+    ctx.logger,
+    "Collected "
+      <> int.to_string(test_count)
+      <> " tests in "
+      <> duration_to_string(total_collect_duration),
+  )
   logger.log(
     ctx.logger,
     "Ran "

@@ -1,3 +1,5 @@
+import birl
+import birl/duration.{type Duration}
 import gleam/dynamic.{type Dynamic}
 import gleam/list
 import gleam/regex
@@ -18,6 +20,8 @@ pub type TestFile {
     filepath: String,
     /// The list of tests in the file.
     tests: List(TestTree),
+    /// The time it took to collect the tests in the file.
+    collect_duration: Duration,
   )
 }
 
@@ -90,6 +94,8 @@ fn identify_tests_in_file(
   test_file: TestSourceFile,
   ctx: Context,
 ) -> Result(TestFile, Nil) {
+  let started_at = birl.utc_now()
+
   let #(standalone_tests, test_functions) =
     test_file.tests
     |> list.partition(is_standalone_test(_, ctx))
@@ -122,12 +128,18 @@ fn identify_tests_in_file(
 
   case tests {
     [] -> Error(Nil)
-    tests ->
+    tests -> {
+      let collect_duration =
+        birl.utc_now()
+        |> birl.difference(started_at)
+
       Ok(TestFile(
         module_name: test_file.module_name,
         filepath: test_file.filepath,
         tests: tests,
+        collect_duration: collect_duration,
       ))
+    }
   }
 }
 
