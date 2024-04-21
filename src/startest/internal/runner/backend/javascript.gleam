@@ -9,8 +9,6 @@ import gleam/javascript/promise.{type Promise}
 @target(javascript)
 import gleam/list
 @target(javascript)
-import gleam/string
-@target(javascript)
 import startest/context.{type Context}
 @target(javascript)
 import startest/internal/gleam_toml
@@ -26,9 +24,9 @@ pub fn run_tests(ctx: Context) -> Promise(Nil) {
 
   use tests <- promise.await(
     test_files
-    |> list.map(fn(filepath) {
+    |> list.map(fn(test_file) {
       let js_module_path =
-        "../" <> package_name <> "/" <> gleam_filepath_to_mjs_filepath(filepath)
+        "../" <> package_name <> "/" <> test_file.module_name <> ".mjs"
 
       get_exports(js_module_path)
       |> promise.map(array.to_list)
@@ -41,16 +39,6 @@ pub fn run_tests(ctx: Context) -> Promise(Nil) {
   tests
   |> core.run_tests(ctx)
   |> promise.resolve
-}
-
-@target(javascript)
-fn gleam_filepath_to_mjs_filepath(filepath: String) {
-  filepath
-  |> string.slice(
-    at_index: string.length("test/"),
-    length: string.length(filepath),
-  )
-  |> string.replace(".gleam", ".mjs")
 }
 
 @target(javascript)

@@ -21,9 +21,9 @@ pub fn run_tests(ctx: Context) -> Nil {
 
   let tests =
     test_files
-    |> list.map(fn(filepath) {
+    |> list.map(fn(test_file) {
       let erlang_module_name =
-        filepath
+        test_file.module_name
         |> gleam_module_name_to_erlang_module_name
         |> binary_to_atom
 
@@ -38,13 +38,8 @@ pub fn run_tests(ctx: Context) -> Nil {
 }
 
 @target(erlang)
-fn gleam_module_name_to_erlang_module_name(filepath: String) -> String {
-  filepath
-  |> string.slice(
-    at_index: string.length("test/"),
-    length: string.length(filepath),
-  )
-  |> string.replace(".gleam", "")
+fn gleam_module_name_to_erlang_module_name(module_name: String) -> String {
+  module_name
   |> string.replace("/", "@")
 }
 

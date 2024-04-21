@@ -9,18 +9,40 @@ import startest/logger
 import startest/test_case.{type Test, Test}
 import startest/test_tree.{type TestTree, decode_test_tree}
 
+/// A file in the `test/` directory that likely contains tests.
+pub type TestFile {
+  TestFile(
+    /// The filepath to the `.gleam` file.
+    filepath: String,
+    /// The name of the Gleam module.
+    module_name: String,
+  )
+}
+
 /// Returns the list of files in the `test/` directory.
-pub fn locate_test_files() -> Result(List(String), Nil) {
+pub fn locate_test_files() -> Result(List(TestFile), Nil) {
   use test_files <- try(
     simplifile.get_files(in: "test")
     |> result.nil_error,
   )
 
-  let gleam_test_files =
-    test_files
-    |> list.filter(fn(filename) { string.ends_with(filename, ".gleam") })
+  test_files
+  |> list.filter(fn(filepath) { string.ends_with(filepath, ".gleam") })
+  |> list.map(fn(filepath) {
+    let module_name = filepath_to_module_name(filepath)
+    TestFile(filepath, module_name)
+  })
+  |> Ok
+}
 
-  Ok(gleam_test_files)
+/// Returns the Gleam module name from the given filepath.
+fn filepath_to_module_name(filepath: String) -> String {
+  filepath
+  |> string.slice(
+    at_index: string.length("test/"),
+    length: string.length(filepath),
+  )
+  |> string.replace(".gleam", "")
 }
 
 pub type NamedFunction =
