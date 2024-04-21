@@ -7,11 +7,6 @@ pub fn main() {
   startest.run(startest.default_config())
 }
 
-pub fn some_test() {
-  2 + 2
-  |> expect.to_equal(4)
-}
-
 pub fn it_tests() {
   describe("it", [
     it("defines a test", fn() {
