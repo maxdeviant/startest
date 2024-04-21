@@ -14,13 +14,19 @@ pub fn run(config: Config) {
   |> glint.name("gleam test --")
   |> glint.pretty_help(glint.default_pretty_help())
   |> glint.add(at: [], do: {
-    use _ <- glint.flag(test_name_filter, test_name_filter_flag())
+    use test_name_filter <- glint.flag(
+      "filter",
+      glint.string()
+        |> glint.default("")
+        |> glint.flag_help(
+        "Filter down tests just to those whose names match the filter",
+      ),
+    )
 
     glint.command(fn(_named_args, args, flags) {
       let filters = args
 
-      let assert Ok(filter) =
-        glint.get_string(from: flags, for: test_name_filter)
+      let assert Ok(filter) = test_name_filter(flags)
 
       let config =
         config
@@ -36,14 +42,4 @@ pub fn run(config: Config) {
     })
   })
   |> glint.run(argv.load().arguments)
-}
-
-const test_name_filter = "filter"
-
-fn test_name_filter_flag() -> glint.Flag(String) {
-  glint.string()
-  |> glint.default("")
-  |> glint.flag_help(
-    "Filter down tests just to those whose names match the filter",
-  )
 }
