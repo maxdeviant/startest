@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added test filtering using positional arguments to the CLI.
+  - You can provide zero or more test filepaths for filtering.
+  - `gleam test -- example` will run all tests in files that have "example" in their name.
+  - `gleam test -- test/startest_test.gleam` will run just the tests in the specified file.
+
+### Changed
+
+- Renamed `--filter` CLI flag to `--test-name-filter`.
+
 ## [0.2.0] - 2024-04-20
 
 ### Added
