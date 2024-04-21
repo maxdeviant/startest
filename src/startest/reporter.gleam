@@ -18,6 +18,7 @@ pub fn report_summary(
   test_files: List(TestFile),
   tests: List(ExecutedTest),
   failed_tests: List(#(Test, TestFailure)),
+  discovery_duration: Duration,
   execution_duration: Duration,
   reporting_duration: Duration,
 ) {
@@ -114,7 +115,9 @@ pub fn report_summary(
       <> duration_to_string(total_duration)
       <> " "
       <> label(
-      "(collect "
+      "(discover "
+      <> duration_to_string(discovery_duration)
+      <> ", collect "
       <> duration_to_string(total_collect_duration)
       <> ", tests "
       <> duration_to_string(execution_duration)

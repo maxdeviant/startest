@@ -19,6 +19,14 @@ import startest/test_failure
 import startest/test_tree
 
 pub fn run_tests(test_files: List(TestFile), ctx: Context) {
+  // We should probably be storing an explicit time when we start the
+  // discovery, in case we insert more operations between the time we
+  // start and when we begin discovering tests, but for now we can just
+  // assume that the first thing we do after starting is begin discovery.
+  let discovery_duration =
+    clock.now(ctx.clock)
+    |> birl.difference(ctx.started_at)
+
   let tests =
     test_files
     |> list.flat_map(fn(test_file) {
@@ -90,6 +98,7 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
     test_files,
     executed_tests,
     failed_tests,
+    discovery_duration,
     execution_duration,
     reporting_duration,
   )
