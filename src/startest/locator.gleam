@@ -7,22 +7,34 @@ import simplifile
 import startest/context.{type Context}
 import startest/logger
 import startest/test_case.{type Test, Test}
-import startest/test_tree.{
-  type TestLocation, type TestTree, TestLocation, decode_test_tree,
+import startest/test_tree.{type TestTree, decode_test_tree}
+
+/// A file that contains tests.
+pub type TestFile {
+  TestFile(
+    /// The name of the Gleam module.
+    module_name: String,
+    /// The filepath to the `.gleam` file.
+    filepath: String,
+    /// The list of tests in the file.
+    tests: List(TestTree),
+  )
 }
 
 /// A file in the `test/` directory that likely contains tests.
-pub type TestFile {
-  TestFile(
-    /// The filepath to the `.gleam` file.
-    filepath: String,
+pub type TestSourceFile {
+  TestSourceFile(
     /// The name of the Gleam module.
     module_name: String,
+    /// The filepath to the `.gleam` file.
+    filepath: String,
+    /// The list of tests in the file.
+    tests: List(TestFunction),
   )
 }
 
 /// Returns the list of files in the `test/` directory.
-pub fn locate_test_files(ctx: Context) -> Result(List(TestFile), Nil) {
+pub fn locate_test_files(ctx: Context) -> Result(List(TestSourceFile), Nil) {
   use test_files <- try(
     simplifile.get_files(in: "test")
     |> result.nil_error,
@@ -40,8 +52,11 @@ pub fn locate_test_files(ctx: Context) -> Result(List(TestFile), Nil) {
     }
   })
   |> list.map(fn(filepath) {
-    let module_name = filepath_to_module_name(filepath)
-    TestFile(filepath, module_name)
+    TestSourceFile(
+      module_name: filepath_to_module_name(filepath),
+      filepath: filepath,
+      tests: [],
+    )
   })
   |> Ok
 }
@@ -60,12 +75,23 @@ pub type TestFunction {
   TestFunction(module_name: String, name: String, body: fn() -> Dynamic)
 }
 
+/// Identifies all of the tests contained in the given list of `TestSourceFile`s.
+///
+/// Any files that don't have any tests will be excluded from the result.
 pub fn identify_tests(
-  test_functions: List(TestFunction),
+  test_files: List(TestSourceFile),
   ctx: Context,
-) -> List(#(TestTree, TestLocation)) {
+) -> List(TestFile) {
+  test_files
+  |> list.filter_map(identify_tests_in_file(_, ctx))
+}
+
+fn identify_tests_in_file(
+  test_file: TestSourceFile,
+  ctx: Context,
+) -> Result(TestFile, Nil) {
   let #(standalone_tests, test_functions) =
-    test_functions
+    test_file.tests
     |> list.partition(is_standalone_test(_, ctx))
   let standalone_tests =
     standalone_tests
@@ -75,11 +101,8 @@ pub fn identify_tests(
         |> dynamic.from
         |> dynamic.unsafe_coerce
 
-      #(
-        Test(test_function.name, function, False)
-          |> test_tree.Test,
-        TestLocation(test_function.module_name),
-      )
+      Test(test_function.name, function, False)
+      |> test_tree.Test
     })
 
   let #(test_suites, _test_functions) =
@@ -90,15 +113,22 @@ pub fn identify_tests(
     |> list.filter_map(fn(test_function) {
       test_function.body()
       |> decode_test_tree
-      |> result.map(fn(test_tree) {
-        #(test_tree, TestLocation(test_function.module_name))
-      })
       |> result.map_error(fn(error) {
         logger.error(ctx.logger, string.inspect(error))
       })
     })
 
-  list.concat([test_suites, standalone_tests])
+  let tests = list.concat([test_suites, standalone_tests])
+
+  case tests {
+    [] -> Error(Nil)
+    tests ->
+      Ok(TestFile(
+        module_name: test_file.module_name,
+        filepath: test_file.filepath,
+        tests: tests,
+      ))
+  }
 }
 
 fn is_standalone_test(test_function: TestFunction, ctx: Context) -> Bool {

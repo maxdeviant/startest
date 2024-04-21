@@ -8,10 +8,6 @@ pub type TestTree {
   Test(Test)
 }
 
-pub type TestLocation {
-  TestLocation(module_name: String)
-}
-
 pub fn all_tests(tree: TestTree) -> List(#(String, Test)) {
   collect_all_tests(tree, [], [])
 }

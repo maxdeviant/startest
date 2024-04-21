@@ -15,7 +15,7 @@ import startest/internal/gleam_toml
 @target(javascript)
 import startest/internal/runner/core
 @target(javascript)
-import startest/locator.{TestFunction}
+import startest/locator.{TestFunction, TestSourceFile}
 
 @target(javascript)
 pub fn run_tests(ctx: Context) -> Promise(Nil) {
@@ -35,9 +35,9 @@ pub fn run_tests(ctx: Context) -> Promise(Nil) {
 
         TestFunction(module_name: test_file.module_name, name: name, body: body)
       }))
+      |> promise.map(fn(tests) { TestSourceFile(..test_file, tests: tests) })
     })
     |> promise.await_list
-    |> promise.map(list.flatten)
     |> promise.map(locator.identify_tests(_, ctx)),
   )
 

@@ -8,6 +8,7 @@ import gleam/option.{None, Some}
 import gleam/string
 import startest/context.{type Context}
 import startest/internal/process
+import startest/locator.{type TestFile}
 import startest/logger
 import startest/reporter
 import startest/reporters.{ReporterContext}
@@ -15,21 +16,20 @@ import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
 import startest/test_failure
-import startest/test_tree.{type TestLocation, type TestTree}
+import startest/test_tree
 
-pub fn run_tests(tests: List(#(TestTree, TestLocation)), ctx: Context) {
+pub fn run_tests(tests: List(TestFile), ctx: Context) {
   let started_at = birl.utc_now()
 
   let tests =
     tests
-    |> list.flat_map(fn(tree_with_location) {
-      let #(tree, location) = tree_with_location
-
-      test_tree.all_tests(tree)
+    |> list.flat_map(fn(test_file) {
+      test_file.tests
+      |> list.flat_map(test_tree.all_tests)
       |> list.map(fn(pair) {
         let #(full_test_name, test_case) = pair
 
-        #(location.module_name, full_test_name, test_case)
+        #(test_file.module_name, full_test_name, test_case)
       })
     })
     |> list.filter(fn(tuple) {
