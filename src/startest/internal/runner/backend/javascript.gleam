@@ -13,6 +13,8 @@ import gleam/string
 @target(javascript)
 import startest/context.{type Context}
 @target(javascript)
+import startest/internal/gleam_toml
+@target(javascript)
 import startest/internal/runner/core
 @target(javascript)
 import startest/locator
@@ -20,9 +22,7 @@ import startest/locator
 @target(javascript)
 pub fn run_tests(ctx: Context) -> Promise(Nil) {
   let assert Ok(test_files) = locator.locate_test_files()
-
-  // TODO: Retrieve package name from `gleam.toml`.
-  let package_name = "startest"
+  let assert Ok(package_name) = gleam_toml.read_name()
 
   use tests <- promise.await(
     test_files
