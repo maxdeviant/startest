@@ -12,7 +12,7 @@ import startest/logger.{Logger}
 /// Runs the Startest CLI.
 pub fn run(config: Config) {
   glint.new()
-  |> glint.with_name("Startest")
+  |> glint.with_name("gleam test --")
   |> glint.with_pretty_help(glint.default_pretty_help())
   |> glint.add(
     at: [],
