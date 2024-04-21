@@ -7,7 +7,9 @@ import simplifile
 import startest/context.{type Context}
 import startest/logger
 import startest/test_case.{type Test, Test}
-import startest/test_tree.{type TestTree, decode_test_tree}
+import startest/test_tree.{
+  type TestLocation, type TestTree, TestLocation, decode_test_tree,
+}
 
 /// A file in the `test/` directory that likely contains tests.
 pub type TestFile {
@@ -45,28 +47,30 @@ fn filepath_to_module_name(filepath: String) -> String {
   |> string.replace(".gleam", "")
 }
 
-pub type NamedFunction =
-  #(String, fn() -> Dynamic)
+pub type TestFunction {
+  TestFunction(module_name: String, name: String, body: fn() -> Dynamic)
+}
 
 pub fn identify_tests(
-  test_functions: List(NamedFunction),
+  test_functions: List(TestFunction),
   ctx: Context,
-) -> List(TestTree) {
+) -> List(#(TestTree, TestLocation)) {
   let #(standalone_tests, test_functions) =
     test_functions
     |> list.partition(is_standalone_test(_, ctx))
   let standalone_tests =
     standalone_tests
-    |> list.map(fn(named_fn) {
-      let #(function_name, function) = named_fn
-
+    |> list.map(fn(test_function) {
       let function: fn() -> Nil =
-        function
+        test_function.body
         |> dynamic.from
         |> dynamic.unsafe_coerce
 
-      Test(function_name, function, False)
-      |> test_tree.Test
+      #(
+        Test(test_function.name, function, False)
+          |> test_tree.Test,
+        TestLocation(test_function.module_name),
+      )
     })
 
   let #(test_suites, _test_functions) =
@@ -74,12 +78,12 @@ pub fn identify_tests(
     |> list.partition(is_test_suite(_, ctx))
   let test_suites =
     test_suites
-    |> list.filter_map(fn(named_fn) {
-      let #(_function_name, function) = named_fn
-
-      let value = function()
-
-      decode_test_tree(value)
+    |> list.filter_map(fn(test_function) {
+      test_function.body()
+      |> decode_test_tree
+      |> result.map(fn(test_tree) {
+        #(test_tree, TestLocation(test_function.module_name))
+      })
       |> result.map_error(fn(error) {
         logger.error(ctx.logger, string.inspect(error))
       })
@@ -88,16 +92,12 @@ pub fn identify_tests(
   list.concat([test_suites, standalone_tests])
 }
 
-fn is_standalone_test(named_fn: NamedFunction, ctx: Context) -> Bool {
-  let #(function_name, _) = named_fn
-
-  function_name
+fn is_standalone_test(test_function: TestFunction, ctx: Context) -> Bool {
+  test_function.name
   |> regex.check(with: ctx.config.discover_standalone_tests_pattern)
 }
 
-fn is_test_suite(named_fn: NamedFunction, ctx: Context) -> Bool {
-  let #(function_name, _) = named_fn
-
-  function_name
+fn is_test_suite(test_function: TestFunction, ctx: Context) -> Bool {
+  test_function.name
   |> regex.check(with: ctx.config.discover_describe_tests_pattern)
 }

@@ -13,7 +13,7 @@ import startest/context.{type Context}
 @target(erlang)
 import startest/internal/runner/core
 @target(erlang)
-import startest/locator
+import startest/locator.{TestFunction}
 
 @target(erlang)
 pub fn run_tests(ctx: Context) -> Nil {
@@ -28,7 +28,13 @@ pub fn run_tests(ctx: Context) -> Nil {
         |> binary_to_atom
 
       get_exports(erlang_module_name)
-      |> list.map(pair.map_first(_, atom_to_binary))
+      |> list.map(fn(pair) {
+        let #(name, body) =
+          pair
+          |> pair.map_first(atom_to_binary)
+
+        TestFunction(module_name: test_file.module_name, name: name, body: body)
+      })
     })
     |> list.flatten
     |> locator.identify_tests(ctx)

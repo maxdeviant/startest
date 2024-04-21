@@ -15,20 +15,29 @@ import startest/test_case.{
   type Test, type TestOutcome, ExecutedTest, Failed, Passed, Skipped,
 }
 import startest/test_failure
-import startest/test_tree.{type TestTree}
+import startest/test_tree.{type TestLocation, type TestTree}
 
-pub fn run_tests(tests: List(TestTree), ctx: Context) {
+pub fn run_tests(tests: List(#(TestTree, TestLocation)), ctx: Context) {
   let started_at = birl.utc_now()
 
   let tests =
     tests
-    |> list.flat_map(fn(tree) { test_tree.all_tests(tree) })
-    |> list.filter(fn(pair) {
-      let #(test_name, _) = pair
+    |> list.flat_map(fn(tree_with_location) {
+      let #(tree, location) = tree_with_location
+
+      test_tree.all_tests(tree)
+      |> list.map(fn(pair) {
+        let #(full_test_name, test_case) = pair
+
+        #(location.module_name, full_test_name, test_case)
+      })
+    })
+    |> list.filter(fn(tuple) {
+      let #(_module_name, full_test_name, _) = tuple
 
       case ctx.config.test_name_pattern {
         Some(test_name_pattern) ->
-          string.contains(does: test_name, contain: test_name_pattern)
+          string.contains(does: full_test_name, contain: test_name_pattern)
         None -> True
       }
     })
@@ -40,9 +49,11 @@ pub fn run_tests(tests: List(TestTree), ctx: Context) {
 
   let executed_tests =
     tests
-    |> list.map(fn(pair) {
+    |> list.map(fn(tuple) {
+      let #(_module_name, full_test_name, test_case) = tuple
+
       let test_case =
-        test_case.Test(pair.0, { pair.1 }.body, { pair.1 }.skipped)
+        test_case.Test(full_test_name, test_case.body, test_case.skipped)
 
       ExecutedTest(test_case, run_test(test_case))
     })
