@@ -1,6 +1,8 @@
 //// The test runner implementation specific to the Erlang target.
 
 @target(erlang)
+import gleam/dynamic.{type Dynamic}
+@target(erlang)
 import gleam/list
 @target(erlang)
 import gleam/pair
@@ -12,8 +14,6 @@ import startest/context.{type Context}
 import startest/internal/runner/core
 @target(erlang)
 import startest/locator
-@target(erlang)
-import startest/test_case.{Test}
 @target(erlang)
 import startest/test_tree.{type TestTree}
 
@@ -33,22 +33,9 @@ pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Nil {
       |> list.map(pair.map_first(_, atom_to_binary))
     })
     |> list.flatten
-    |> list.filter(fn(export) {
-      let #(export_name, _) = export
+    |> locator.identify_tests(ctx)
 
-      string.ends_with(export_name, "_test")
-    })
-
-  let test_cases =
-    test_functions
-    |> list.map(fn(export) {
-      let #(function_name, function) = export
-
-      Test(function_name, function, False)
-      |> test_tree.Test
-    })
-
-  core.run_tests(ctx, list.concat([tests, test_cases]))
+  core.run_tests(ctx, list.concat([tests, test_functions]))
 }
 
 @target(erlang)
@@ -67,7 +54,7 @@ type Atom
 
 @target(erlang)
 @external(erlang, "startest_ffi", "get_exports")
-fn get_exports(module_name: Atom) -> List(#(Atom, fn() -> Nil))
+fn get_exports(module_name: Atom) -> List(#(Atom, fn() -> Dynamic))
 
 @target(erlang)
 @external(erlang, "erlang", "binary_to_atom")

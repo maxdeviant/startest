@@ -1,6 +1,8 @@
 //// The test runner implementation specific to the JavaScript target.
 
 @target(javascript)
+import gleam/dynamic.{type Dynamic}
+@target(javascript)
 import gleam/javascript/array.{type Array}
 @target(javascript)
 import gleam/javascript/promise.{type Promise}
@@ -14,8 +16,6 @@ import startest/context.{type Context}
 import startest/internal/runner/core
 @target(javascript)
 import startest/locator
-@target(javascript)
-import startest/test_case.{Test}
 @target(javascript)
 import startest/test_tree.{type TestTree}
 
@@ -37,23 +37,10 @@ pub fn run_tests(ctx: Context, tests: List(TestTree)) -> Promise(Nil) {
     })
     |> promise.await_list
     |> promise.map(list.flatten)
-    |> promise.map(list.filter(_, fn(export) {
-      let #(export_name, _) = export
-
-      string.ends_with(export_name, "_test")
-    })),
+    |> promise.map(locator.identify_tests(_, ctx)),
   )
 
-  let test_cases =
-    test_functions
-    |> list.map(fn(export) {
-      let #(function_name, function) = export
-
-      Test(function_name, function, False)
-      |> test_tree.Test
-    })
-
-  core.run_tests(ctx, list.concat([tests, test_cases]))
+  core.run_tests(ctx, list.concat([tests, test_functions]))
   |> promise.resolve
 }
 
@@ -69,4 +56,6 @@ fn gleam_filepath_to_mjs_filepath(filepath: String) {
 
 @target(javascript)
 @external(javascript, "../../../../startest_ffi.mjs", "get_exports")
-fn get_exports(module_path: String) -> Promise(Array(#(String, fn() -> Nil)))
+fn get_exports(
+  module_path: String,
+) -> Promise(Array(#(String, fn() -> Dynamic)))

@@ -3,7 +3,7 @@ import startest.{describe}
 import startest/expect
 import test_helpers.{it_fails, it_passes}
 
-pub fn suite() {
+pub fn expect_tests() {
   describe("startest/expect", [
     to_equal_tests(),
     to_not_equal_tests(),
