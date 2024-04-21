@@ -17,7 +17,7 @@ import startest/locator.{TestFunction}
 
 @target(erlang)
 pub fn run_tests(ctx: Context) -> Nil {
-  let assert Ok(test_files) = locator.locate_test_files()
+  let assert Ok(test_files) = locator.locate_test_files(ctx)
 
   let tests =
     test_files

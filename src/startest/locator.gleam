@@ -22,7 +22,7 @@ pub type TestFile {
 }
 
 /// Returns the list of files in the `test/` directory.
-pub fn locate_test_files() -> Result(List(TestFile), Nil) {
+pub fn locate_test_files(ctx: Context) -> Result(List(TestFile), Nil) {
   use test_files <- try(
     simplifile.get_files(in: "test")
     |> result.nil_error,
@@ -30,6 +30,15 @@ pub fn locate_test_files() -> Result(List(TestFile), Nil) {
 
   test_files
   |> list.filter(fn(filepath) { string.ends_with(filepath, ".gleam") })
+  |> list.filter(fn(filepath) {
+    case ctx.config.filters {
+      [] -> True
+      filters ->
+        list.any(in: filters, satisfying: fn(filter) {
+          string.contains(does: filepath, contain: filter)
+        })
+    }
+  })
   |> list.map(fn(filepath) {
     let module_name = filepath_to_module_name(filepath)
     TestFile(filepath, module_name)

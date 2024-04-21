@@ -19,7 +19,7 @@ import startest/locator.{TestFunction}
 
 @target(javascript)
 pub fn run_tests(ctx: Context) -> Promise(Nil) {
-  let assert Ok(test_files) = locator.locate_test_files()
+  let assert Ok(test_files) = locator.locate_test_files(ctx)
   let assert Ok(package_name) = gleam_toml.read_name()
 
   use tests <- promise.await(

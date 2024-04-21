@@ -45,6 +45,7 @@ pub fn default_config() -> Config {
     reporters: [default_reporter.new()],
     discover_describe_tests_pattern: discover_describe_tests_pattern,
     discover_standalone_tests_pattern: discover_standalone_tests_pattern,
+    filters: [],
     test_name_pattern: None,
   )
 }

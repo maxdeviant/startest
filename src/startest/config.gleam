@@ -15,6 +15,11 @@ pub type Config {
     ///
     /// If a function's name matches the pattern it will be run as a test.
     discover_standalone_tests_pattern: Regex,
+    /// The list of test filepath filters.
+    ///
+    /// Each filter is matched against a test file's path to determine whether the
+    /// tests in that file should be run.
+    filters: List(String),
     /// The pattern to use to filter test names.
     test_name_pattern: Option(String),
   )
@@ -40,6 +45,11 @@ pub fn with_discover_standalone_tests_pattern(
     ..config,
     discover_standalone_tests_pattern: discover_standalone_tests_pattern,
   )
+}
+
+/// Updates the given `Config` with the specified `filters`.
+pub fn with_filters(config: Config, filters: List(String)) -> Config {
+  Config(..config, filters: filters)
 }
 
 /// Updates the given `Config` with the specified `test_name_pattern`.

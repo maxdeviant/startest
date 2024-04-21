@@ -17,11 +17,14 @@ pub fn run(config: Config) {
   |> glint.add(
     at: [],
     do: glint.command(fn(input: glint.CommandInput) {
+      let filters = input.args
+
       let assert Ok(filter) =
         flag.get_string(from: input.flags, for: test_name_filter)
 
       let config =
         config
+        |> config.with_filters(filters)
         |> config.with_test_name_pattern(case filter {
           "" -> None
           filter -> Some(filter)
