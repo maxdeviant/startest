@@ -46,12 +46,13 @@ pub fn a_standalone_test() {
 
 ## Migrating from gleeunit
 
-If you're coming from [`gleeunit`](https://hexdocs.pm/gleeunit)
+If you're coming from [`gleeunit`](https://hexdocs.pm/gleeunit), follow these steps for an easy migration to Startest:
 
 1. Install Startest with `gleam add --dev startest`
 1. Replace all imports of `gleeunit/should` with `startest/expect`
 1. Update `gleeunit/should` assertions to `startest/expect`
    - Consult the migration table down below for the equivalent assertions in Startest
+1. Remove `gleeunit` with `gleam remove gleeunit`
 1. Optionally, begin using the `describe` API to structure your tests
 
 | `gleeunit/should`  | `startest/expect`                     |
