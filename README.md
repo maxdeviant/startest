@@ -44,6 +44,30 @@ pub fn a_standalone_test() {
 }
 ```
 
+## Migrating from gleeunit
+
+If you're coming from [`gleeunit`](https://hexdocs.pm/gleeunit)
+
+1. Install Startest with `gleam add --dev startest`
+1. Replace all imports of `gleeunit/should` with `startest/expect`
+1. Update `gleeunit/should` assertions to `startest/expect`
+   - Consult the migration table down below for the equivalent assertions in Startest
+1. Optionally, begin using the `describe` API to structure your tests
+
+| `gleeunit/should`  | `startest/expect`                     |
+| ------------------ | ------------------------------------- |
+| `should.equal`     | `expect.to_equal`                     |
+| `should.not_equal` | `expect.to_not_equal`                 |
+| `should.be_true`   | `expect.to_be_true`                   |
+| `should.be_false`  | `expect.to_be_false`                  |
+| `should.be_ok`     | `expect.to_be_ok`                     |
+| `should.be_error`  | `expect.to_be_error`                  |
+| `should.be_some`   | `expect.to_be_some`                   |
+| `should.be_none`   | `expect.to_be_none`                   |
+| `should.fail`      | `expect.to_be_true(False)` or `panic` |
+
+> This conversion can typically be done with a find/replace from `should.` to `expect.to_`.
+
 ## Targets
 
-`startest` supports both targets: Erlang and JavaScript.
+Startest supports both targets: Erlang and JavaScript.
