@@ -9,11 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `startest.run` for running tests.
+  - `startest.run` takes a `Config` and will auto-discover and run the tests.
+- Added Startest CLI
+  - Calling `startest.run` in your test `main` will allow you to use the CLI via `gleam test`.
 - Added dot reporter.
+- Added a `finished` callback to `Reporter`.
 
 ### Changed
 
-- Changed `startest.run_tests` to take a `Config` instead of a `List(Reporter)`.
+- Changed `Reporter.report` to take a `ReporterContext` as the first argument.
+
+### Removed
+
+- Removed `startest.run_tests` in favor of `startest.run`.
 
 ## [0.1.0] - 2024-04-19
 
