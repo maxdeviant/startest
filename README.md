@@ -2,6 +2,8 @@
 
 [![Package Version](https://img.shields.io/hexpm/v/startest)](https://hex.pm/packages/startest)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/startest/)
+![Erlang-compatible](https://img.shields.io/badge/target-erlang-b83998)
+![JavaScript-compatible](https://img.shields.io/badge/target-javascript-f1e05a)
 
 🌠 A testing framework to help you shoot for the stars.
 
@@ -73,7 +75,3 @@ This conversion can typically be done with a find/replace:
 - should.
 + expect.to_
 ```
-
-## Targets
-
-Startest supports both targets: Erlang and JavaScript.
