@@ -13,6 +13,12 @@
 gleam add --dev startest
 ```
 
+## Features
+
+- Write tests using the `describe` API or as standalone functions
+- Filter tests by file path or test name
+- Pretty assertions from `expect` matchers
+
 ## Usage
 
 ```gleam
