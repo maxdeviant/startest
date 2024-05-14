@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/to_not_equal with two equal integers
+---
+Expected 3 to not equal 3
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 3[39m
+[31m+ 3[39m

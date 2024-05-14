@@ -13,10 +13,13 @@ pub fn to_equal_tests() {
         }),
       ]),
       describe("given two different integers", [
-        it_fails(fn() {
-          2
-          |> expect.to_equal(4)
-        }),
+        it_fails_matching_snapshot(
+          "expect/to_equal with two different integers",
+          fn() {
+            2
+            |> expect.to_equal(4)
+          },
+        ),
       ]),
     ]),
   ])
@@ -32,10 +35,13 @@ pub fn to_not_equal_tests() {
         }),
       ]),
       describe("given two equal integers", [
-        it_fails(fn() {
-          3
-          |> expect.to_not_equal(3)
-        }),
+        it_fails_matching_snapshot(
+          "expect/to_not_equal with two equal integers",
+          fn() {
+            3
+            |> expect.to_not_equal(3)
+          },
+        ),
       ]),
     ]),
   ])
@@ -51,7 +57,7 @@ pub fn to_be_true_tests() {
         }),
       ]),
       describe("given False", [
-        it_fails(fn() {
+        it_fails_matching_snapshot("expect/to_be_true given False", fn() {
           False
           |> expect.to_be_true
         }),
@@ -70,7 +76,7 @@ pub fn to_be_false_tests() {
         }),
       ]),
       describe("given True", [
-        it_fails(fn() {
+        it_fails_matching_snapshot("expect/to_be_false given True", fn() {
           True
           |> expect.to_be_false
         }),
@@ -89,7 +95,7 @@ pub fn to_be_ok_tests() {
         }),
       ]),
       describe("given an Error", [
-        it_fails(fn() {
+        it_fails_matching_snapshot("expect/to_be_ok given an Error", fn() {
           Error(Nil)
           |> expect.to_be_ok
         }),
@@ -108,7 +114,7 @@ pub fn to_be_error_tests() {
         }),
       ]),
       describe("given an Ok", [
-        it_fails(fn() {
+        it_fails_matching_snapshot("expect/to_be_error given an Ok", fn() {
           Ok(Nil)
           |> expect.to_be_error
         }),
@@ -127,7 +133,7 @@ pub fn to_be_some_tests() {
         }),
       ]),
       describe("given a None", [
-        it_fails(fn() {
+        it_fails_matching_snapshot("expect/to_be_some given a None", fn() {
           None
           |> expect.to_be_some
         }),
@@ -146,7 +152,7 @@ pub fn to_be_none_tests() {
         }),
       ]),
       describe("given a Some", [
-        it_fails(fn() {
+        it_fails_matching_snapshot("expect/to_be_none given a Some", fn() {
           Some(Nil)
           |> expect.to_be_none
         }),
@@ -203,10 +209,6 @@ pub fn to_loosely_equal_tests() {
         }),
       ]),
       describe("given two loosely inequal floats", [
-        it_fails(fn() {
-          2.0
-          |> expect.to_loosely_equal(2.4, tolerating: 0.1)
-        }),
         it_fails_matching_snapshot("expect/to_loosely_equal", fn() {
           2.0
           |> expect.to_loosely_equal(2.4, tolerating: 0.1)

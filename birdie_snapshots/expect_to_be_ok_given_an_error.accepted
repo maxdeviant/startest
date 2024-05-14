@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/to_be_ok given an Error
+---
+Expected Error(Nil) to be Ok
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Ok(_)[39m
+[31m+ Error(Nil)[39m

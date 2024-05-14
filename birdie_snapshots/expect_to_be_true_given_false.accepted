@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/to_be_true given False
+---
+Expected False to equal True
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- True[39m
+[31m+ False[39m

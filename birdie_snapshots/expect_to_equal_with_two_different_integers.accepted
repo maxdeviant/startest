@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/to_equal with two different integers
+---
+Expected 2 to equal 4
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 4[39m
+[31m+ 2[39m

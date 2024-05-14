@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/to_be_some given a None
+---
+Expected None to be Some
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Some(_)[39m
+[31m+ None[39m
