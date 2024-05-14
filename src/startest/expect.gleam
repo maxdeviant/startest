@@ -1,6 +1,7 @@
 //// Assertions to be used in tests.
 
 import exception
+import gleam/float
 import gleam/option.{type Option, None, Some}
 import gleam/string
 import startest/assertion_error.{AssertionError}
@@ -134,6 +135,32 @@ pub fn to_not_throw(f: fn() -> a) -> a {
         string.concat(["Expected ", string.inspect(f), " to not throw an error"]),
         string.inspect(Nil),
         string.inspect(exception),
+      )
+      |> assertion_error.raise
+  }
+}
+
+/// Asserts that the given `Float` is equal to the expected `Float` within the
+/// provided tolerance.
+pub fn to_loosely_equal(
+  actual: Float,
+  expected expected: Float,
+  tolerating tolerance: Float,
+) -> Nil {
+  case float.loosely_equals(actual, expected, tolerance) {
+    True -> Nil
+    False ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to loosely equal ",
+          string.inspect(expected),
+          " with a tolerance of ",
+          string.inspect(tolerance),
+        ]),
+        string.inspect(actual),
+        string.inspect(expected) <> " ± " <> string.inspect(tolerance),
       )
       |> assertion_error.raise
   }

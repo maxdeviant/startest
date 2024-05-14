@@ -192,3 +192,22 @@ pub fn to_not_throw_tests() {
     ]),
   ])
 }
+
+pub fn to_loosely_equal_tests() {
+  describe("startest/expect", [
+    describe("to_loosely_equal", [
+      describe("given two loosely equal floats", [
+        it_passes(fn() {
+          2.0
+          |> expect.to_loosely_equal(2.4, tolerating: 0.5)
+        }),
+      ]),
+      describe("given two loosely inequal floats", [
+        it_fails(fn() {
+          2.0
+          |> expect.to_loosely_equal(2.4, tolerating: 0.1)
+        }),
+      ]),
+    ]),
+  ])
+}
