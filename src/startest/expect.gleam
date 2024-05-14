@@ -153,15 +153,25 @@ pub fn to_loosely_equal(
       AssertionError(
         string.concat([
           "Expected ",
-          string.inspect(actual),
+          format_float(actual),
           " to loosely equal ",
-          string.inspect(expected),
+          format_float(expected),
           " with a tolerance of ",
-          string.inspect(tolerance),
+          format_float(tolerance),
         ]),
-        string.inspect(actual),
-        string.inspect(expected) <> " ± " <> string.inspect(tolerance),
+        format_float(actual),
+        format_float(expected) <> " ± " <> format_float(tolerance),
       )
       |> assertion_error.raise
+  }
+}
+
+/// Formats a `Float` value as a `String` in a way that is consistent
+/// across targets.
+fn format_float(value: Float) -> String {
+  let repr = float.to_string(value)
+  case string.contains(repr, ".") {
+    True -> repr
+    False -> repr <> ".0"
   }
 }

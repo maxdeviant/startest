@@ -18,3 +18,4 @@ simplifile = ">= 1.7.0 and < 2.0.0"
 tom = ">= 0.3.0 and < 1.0.0"
 
 [dev-dependencies]
+birdie = ">= 1.1.5 and < 2.0.0"

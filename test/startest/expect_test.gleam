@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import startest.{describe}
 import startest/expect
-import test_helpers.{it_fails, it_passes}
+import test_helpers.{it_fails, it_fails_matching_snapshot, it_passes}
 
 pub fn to_equal_tests() {
   describe("startest/expect", [
@@ -204,6 +204,10 @@ pub fn to_loosely_equal_tests() {
       ]),
       describe("given two loosely inequal floats", [
         it_fails(fn() {
+          2.0
+          |> expect.to_loosely_equal(2.4, tolerating: 0.1)
+        }),
+        it_fails_matching_snapshot("expect/to_loosely_equal", fn() {
           2.0
           |> expect.to_loosely_equal(2.4, tolerating: 0.1)
         }),
