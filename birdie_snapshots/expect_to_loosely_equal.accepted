@@ -2,7 +2,7 @@
 version: 1.1.5
 title: expect/to_loosely_equal
 ---
-Expected 2.0 to loosely equal 2.4 with a tolerance of 0.1
+Expected 2.4 to loosely equal 2.0 with a tolerance of 0.1
 
 [32m- Expected[39m
 [31m+ Received[39m

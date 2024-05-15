@@ -153,9 +153,9 @@ pub fn to_loosely_equal(
       AssertionError(
         string.concat([
           "Expected ",
-          format_float(actual),
-          " to loosely equal ",
           format_float(expected),
+          " to loosely equal ",
+          format_float(actual),
           " with a tolerance of ",
           format_float(tolerance),
         ]),
