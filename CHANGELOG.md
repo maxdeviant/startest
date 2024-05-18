@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded `glint` to v1.0.0-rc2.
+
 ## [0.2.3] - 2024-05-13
 
 ### Added

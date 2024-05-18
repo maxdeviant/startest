@@ -16,7 +16,7 @@ import startest/logger.{Logger}
 /// Runs the Startest CLI.
 pub fn run(config: Config) {
   glint.new()
-  |> glint.name("gleam test --")
+  |> glint.with_name("gleam test --")
   |> glint.pretty_help(glint.default_pretty_help())
   |> glint.add(at: [], do: {
     let package_name =
@@ -39,10 +39,9 @@ pub fn run(config: Config) {
       ]),
     )
     use test_name_filter <- glint.flag(
-      "test-name-filter",
-      glint.string()
-        |> glint.default("")
-        |> glint.flag_help(
+      glint.string_flag("test-name-filter")
+      |> glint.flag_default("")
+      |> glint.flag_help(
         "Filter down tests just to those whose names match the filter",
       ),
     )
