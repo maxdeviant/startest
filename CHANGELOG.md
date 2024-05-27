@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed warnings with `gleam_stdlib` v0.38.0.
+
 ## [0.2.4] - 2024-05-18
 
 ### Changed

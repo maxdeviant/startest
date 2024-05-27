@@ -1,4 +1,5 @@
 import gleam/dynamic.{type DecodeError, type Dynamic} as dyn
+import startest/internal/unsafe
 import startest/test_failure.{type TestFailure}
 
 pub type TestBody =
@@ -44,6 +45,6 @@ pub fn decode_test(value: Dynamic) -> Result(Test, List(DecodeError)) {
 }
 
 fn decode_test_body(value: Dynamic) -> Result(TestBody, List(DecodeError)) {
-  let function: TestBody = dyn.unsafe_coerce(value)
+  let function: TestBody = unsafe.coerce(value)
   Ok(function)
 }

@@ -8,6 +8,7 @@ import gleam/result.{try}
 import gleam/string
 import simplifile
 import startest/context.{type Context}
+import startest/internal/unsafe
 import startest/logger
 import startest/test_case.{type Test, Test}
 import startest/test_tree.{type TestTree, decode_test_tree}
@@ -106,7 +107,7 @@ fn identify_tests_in_file(
       let function: fn() -> Nil =
         test_function.body
         |> dynamic.from
-        |> dynamic.unsafe_coerce
+        |> unsafe.coerce
 
       Test(test_function.name, function, False)
       |> test_tree.Test
