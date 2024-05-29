@@ -161,6 +161,28 @@ pub fn to_be_none_tests() {
   ])
 }
 
+pub fn string_to_contain_tests() {
+  describe("startest/expect", [
+    describe("string_to_contain", [
+      describe("given a string that contains the expected pattern", [
+        it_passes(fn() {
+          "Scarecrow"
+          |> expect.string_to_contain("care")
+        }),
+      ]),
+      describe("given a string that does contain the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_contain given non-matching string",
+          fn() {
+            "Stupendous"
+            |> expect.string_to_contain("apend")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn to_throw_tests() {
   describe("startest/expect", [
     describe("to_throw", [

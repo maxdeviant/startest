@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `expect/string_to_contain` for asserting that a string contains another string.
+
 ### Changed
 
 - Fixed warnings with `gleam_stdlib` v0.38.0.

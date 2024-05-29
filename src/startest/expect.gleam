@@ -112,6 +112,25 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
   }
 }
 
+/// Asserts that the given string contains the expected string.
+pub fn string_to_contain(actual: String, expected: String) -> Nil {
+  case string.contains(actual, expected) {
+    True -> Nil
+    False ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to contain ",
+          string.inspect(expected),
+        ]),
+        actual,
+        expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
 /// Asserts that the given function throws an error.
 pub fn to_throw(f: fn() -> a) -> Nil {
   case exception.rescue(f) {
