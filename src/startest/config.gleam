@@ -25,6 +25,11 @@ pub type Config {
   )
 }
 
+/// Updates the given `Config` with the specified `reporters`.
+pub fn with_reporters(config: Config, reporters: List(Reporter)) -> Config {
+  Config(..config, reporters: reporters)
+}
+
 /// Updates the given `Config` with the specified `discover_describe_tests_pattern`.
 pub fn with_discover_describe_tests_pattern(
   config: Config,
