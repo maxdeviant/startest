@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/string_to_start_with given non-matching string
+---
+Expected "Gleam" to start with "Glam"
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Glam[39m
+[31m+ Gleam[39m

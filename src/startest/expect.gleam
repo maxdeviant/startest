@@ -114,7 +114,7 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
 
 /// Asserts that the given string contains the expected string.
 pub fn string_to_contain(actual: String, expected: String) -> Nil {
-  case string.contains(actual, expected) {
+  case string.contains(does: actual, contain: expected) {
     True -> Nil
     False ->
       AssertionError(
@@ -122,6 +122,44 @@ pub fn string_to_contain(actual: String, expected: String) -> Nil {
           "Expected ",
           string.inspect(actual),
           " to contain ",
+          string.inspect(expected),
+        ]),
+        actual,
+        expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
+/// Asserts that the given string starts with the expected string.
+pub fn string_to_start_with(actual: String, expected: String) -> Nil {
+  case string.starts_with(actual, expected) {
+    True -> Nil
+    False ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to start with ",
+          string.inspect(expected),
+        ]),
+        actual,
+        expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
+/// Asserts that the given string ends with the expected string.
+pub fn string_to_end_with(actual: String, expected: String) -> Nil {
+  case string.ends_with(actual, expected) {
+    True -> Nil
+    False ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to end with ",
           string.inspect(expected),
         ]),
         actual,

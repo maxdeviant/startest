@@ -170,12 +170,56 @@ pub fn string_to_contain_tests() {
           |> expect.string_to_contain("care")
         }),
       ]),
-      describe("given a string that does contain the expected pattern", [
+      describe("given a string that does not contain the expected pattern", [
         it_fails_matching_snapshot(
           "expect/string_to_contain given non-matching string",
           fn() {
             "Stupendous"
             |> expect.string_to_contain("apend")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
+pub fn string_to_start_with_tests() {
+  describe("startest/expect", [
+    describe("string_to_start_with", [
+      describe("given a string that starts with the expected pattern", [
+        it_passes(fn() {
+          "Dragonfruit"
+          |> expect.string_to_start_with("Dragon")
+        }),
+      ]),
+      describe("given a string that does not start with the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_start_with given non-matching string",
+          fn() {
+            "Gleam"
+            |> expect.string_to_start_with("Glam")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
+pub fn string_to_end_with_tests() {
+  describe("endest/expect", [
+    describe("string_to_end_with", [
+      describe("given a string that ends with the expected pattern", [
+        it_passes(fn() {
+          "Dragonfruit"
+          |> expect.string_to_end_with("fruit")
+        }),
+      ]),
+      describe("given a string that does not end with the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_end_with given non-matching string",
+          fn() {
+            "Gleam"
+            |> expect.string_to_end_with("eamlin")
           },
         ),
       ]),
