@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `expect/string_to_contain` for asserting that a string contains another string.
 - Added `expect/string_to_start_with` for asserting that a string starts with another string.
 - Added `expect/string_to_end_with` for asserting that a string ends with another string.
+- Added `expect/list_to_contain` for asserting that a list contains a given element.
 
 ### Changed
 

@@ -2,6 +2,7 @@
 
 import exception
 import gleam/float
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
 import startest/assertion_error.{AssertionError}
@@ -164,6 +165,25 @@ pub fn string_to_end_with(actual: String, expected: String) -> Nil {
         ]),
         actual,
         expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
+/// Asserts that the given list contains the expected element.
+pub fn list_to_contain(actual: List(a), expected: a) -> Nil {
+  case list.contains(actual, expected) {
+    True -> Nil
+    False ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to contain ",
+          string.inspect(expected),
+        ]),
+        string.inspect(actual),
+        string.inspect(expected),
       )
       |> assertion_error.raise
   }

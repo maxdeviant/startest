@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/list_to_contain given non-matching element
+---
+Expected ["apple", "banana", "cherry"] to contain "dragonfruit"
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- "dragonfruit"[39m
+[31m+ ["apple", "banana", "cherry"][39m

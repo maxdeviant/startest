@@ -206,7 +206,7 @@ pub fn string_to_start_with_tests() {
 }
 
 pub fn string_to_end_with_tests() {
-  describe("endest/expect", [
+  describe("startest/expect", [
     describe("string_to_end_with", [
       describe("given a string that ends with the expected pattern", [
         it_passes(fn() {
@@ -220,6 +220,28 @@ pub fn string_to_end_with_tests() {
           fn() {
             "Gleam"
             |> expect.string_to_end_with("eamlin")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
+pub fn list_to_contain_tests() {
+  describe("startest/expect", [
+    describe("list_to_contain", [
+      describe("given a list that contains the expected element", [
+        it_passes(fn() {
+          ["apple", "banana", "cherry"]
+          |> expect.list_to_contain("cherry")
+        }),
+      ]),
+      describe("given a list that does not contain the expected element", [
+        it_fails_matching_snapshot(
+          "expect/list_to_contain given non-matching element",
+          fn() {
+            ["apple", "banana", "cherry"]
+            |> expect.list_to_contain("dragonfruit")
           },
         ),
       ]),
