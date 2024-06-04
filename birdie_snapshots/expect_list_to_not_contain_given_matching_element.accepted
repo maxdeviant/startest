@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/list_to_not_contain given matching element
+---
+Expected ["Rick", "Morty", "Summer"] to not contain "Morty"
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- "Morty"[39m
+[31m+ ["Rick", "Morty", "Summer"][39m

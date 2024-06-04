@@ -249,6 +249,28 @@ pub fn list_to_contain_tests() {
   ])
 }
 
+pub fn list_to_not_contain_tests() {
+  describe("startest/expect", [
+    describe("list_to_not_contain", [
+      describe("given a list that does not contain the expected element", [
+        it_passes(fn() {
+          ["Rick", "Morty", "Summer"]
+          |> expect.list_to_not_contain("Jerry")
+        }),
+      ]),
+      describe("given a list that contains the expected element", [
+        it_fails_matching_snapshot(
+          "expect/list_to_not_contain given matching element",
+          fn() {
+            ["Rick", "Morty", "Summer"]
+            |> expect.list_to_not_contain("Morty")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn to_throw_tests() {
   describe("startest/expect", [
     describe("to_throw", [
