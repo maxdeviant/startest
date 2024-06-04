@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/string_to_not_contain given matching string
+---
+Expected "Mr. Frundles" to not contain "undles"
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- undles[39m
+[31m+ Mr. Frundles[39m

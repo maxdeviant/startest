@@ -132,6 +132,25 @@ pub fn string_to_contain(actual: String, expected: String) -> Nil {
   }
 }
 
+/// Asserts that the given string does not contain the expected string.
+pub fn string_to_not_contain(actual: String, expected: String) -> Nil {
+  case string.contains(does: actual, contain: expected) {
+    False -> Nil
+    True ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to not contain ",
+          string.inspect(expected),
+        ]),
+        actual,
+        expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
 /// Asserts that the given string starts with the expected string.
 pub fn string_to_start_with(actual: String, expected: String) -> Nil {
   case string.starts_with(actual, expected) {
