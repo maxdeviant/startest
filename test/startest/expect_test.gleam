@@ -183,6 +183,28 @@ pub fn string_to_contain_tests() {
   ])
 }
 
+pub fn string_to_not_contain_tests() {
+  describe("startest/expect", [
+    describe("string_to_not_contain", [
+      describe("given a string that does not contain the expected pattern", [
+        it_passes(fn() {
+          "Rick Sanchez"
+          |> expect.string_to_not_contain("Morty")
+        }),
+      ]),
+      describe("given a string that contains the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_not_contain given matching string",
+          fn() {
+            "Mr. Frundles"
+            |> expect.string_to_not_contain("undles")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn string_to_start_with_tests() {
   describe("startest/expect", [
     describe("string_to_start_with", [
