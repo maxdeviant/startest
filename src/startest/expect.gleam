@@ -208,6 +208,25 @@ pub fn list_to_contain(actual: List(a), expected: a) -> Nil {
   }
 }
 
+/// Asserts that the given list does not contain the expected element.
+pub fn list_to_not_contain(actual: List(a), expected: a) -> Nil {
+  case list.contains(actual, expected) {
+    False -> Nil
+    True ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to not contain ",
+          string.inspect(expected),
+        ]),
+        string.inspect(actual),
+        string.inspect(expected),
+      )
+      |> assertion_error.raise
+  }
+}
+
 /// Asserts that the given function throws an error.
 pub fn to_throw(f: fn() -> a) -> Nil {
   case exception.rescue(f) {
