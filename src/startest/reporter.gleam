@@ -17,14 +17,17 @@ pub fn report_summary(
   ctx: Context,
   test_files: List(TestFile),
   tests: List(ExecutedTest),
+  skipped_tests: List(Test),
   failed_tests: List(#(Test, TestFailure)),
   discovery_duration: Duration,
   execution_duration: Duration,
   reporting_duration: Duration,
 ) {
   let total_test_count = list.length(tests)
+  let skipped_test_count = list.length(skipped_tests)
   let failed_test_count = list.length(failed_tests)
-  let passed_test_count = total_test_count - failed_test_count
+  let passed_test_count =
+    total_test_count - skipped_test_count - failed_test_count
   let has_any_failures = failed_test_count > 0
 
   case has_any_failures {
@@ -63,18 +66,20 @@ pub fn report_summary(
     0 -> None
     _ -> Some(ansi.bright_green(int.to_string(passed_test_count) <> " passed"))
   }
+  let skipped_tests = case skipped_test_count {
+    0 -> None
+    _ -> Some(ansi.yellow(int.to_string(skipped_test_count) <> " skipped"))
+  }
   let failed_tests = case failed_test_count {
     0 -> None
     _ -> Some(ansi.bright_red(int.to_string(failed_test_count) <> " failed"))
   }
   let total_tests = ansi.gray("(" <> int.to_string(total_test_count) <> ")")
 
-  let failed_or_passed_tests = case passed_tests, failed_tests {
-    Some(passed_tests), Some(failed_tests) ->
-      failed_tests <> " | " <> passed_tests
-    Some(tests), None | None, Some(tests) -> tests
-    None, None -> ""
-  }
+  let tests_by_category =
+    [passed_tests, skipped_tests, failed_tests]
+    |> list.filter_map(option.to_result(_, Nil))
+    |> string.join(" | ")
 
   let started_at =
     ctx.started_at
@@ -98,7 +103,7 @@ pub fn report_summary(
   )
   logger.log(
     ctx.logger,
-    label("     Tests: ") <> failed_or_passed_tests <> " " <> total_tests,
+    label("     Tests: ") <> tests_by_category <> " " <> total_tests,
   )
   logger.log(
     ctx.logger,

@@ -85,6 +85,14 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
     clock.now(ctx.clock)
     |> birl.difference(reporting_started_at)
 
+  let skipped_tests =
+    executed_tests
+    |> list.filter_map(fn(executed_test) {
+      case executed_test.outcome {
+        Skipped -> Ok(executed_test.test_case)
+        Passed | Failed(_) -> Error(Nil)
+      }
+    })
   let failed_tests =
     executed_tests
     |> list.filter_map(fn(executed_test) {
@@ -97,6 +105,7 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
     ctx,
     test_files,
     executed_tests,
+    skipped_tests,
     failed_tests,
     discovery_duration,
     execution_duration,
