@@ -183,6 +183,28 @@ pub fn string_to_contain_tests() {
   ])
 }
 
+pub fn string_to_not_contain_tests() {
+  describe("startest/expect", [
+    describe("string_to_not_contain", [
+      describe("given a string that does not contain the expected pattern", [
+        it_passes(fn() {
+          "Rick Sanchez"
+          |> expect.string_to_not_contain("Morty")
+        }),
+      ]),
+      describe("given a string that contains the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_not_contain given matching string",
+          fn() {
+            "Mr. Frundles"
+            |> expect.string_to_not_contain("undles")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn string_to_start_with_tests() {
   describe("startest/expect", [
     describe("string_to_start_with", [
@@ -242,6 +264,28 @@ pub fn list_to_contain_tests() {
           fn() {
             ["apple", "banana", "cherry"]
             |> expect.list_to_contain("dragonfruit")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
+pub fn list_to_not_contain_tests() {
+  describe("startest/expect", [
+    describe("list_to_not_contain", [
+      describe("given a list that does not contain the expected element", [
+        it_passes(fn() {
+          ["Rick", "Morty", "Summer"]
+          |> expect.list_to_not_contain("Jerry")
+        }),
+      ]),
+      describe("given a list that contains the expected element", [
+        it_fails_matching_snapshot(
+          "expect/list_to_not_contain given matching element",
+          fn() {
+            ["Rick", "Morty", "Summer"]
+            |> expect.list_to_not_contain("Morty")
           },
         ),
       ]),
