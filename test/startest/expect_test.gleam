@@ -249,6 +249,28 @@ pub fn string_to_end_with_tests() {
   ])
 }
 
+pub fn string_to_not_end_with_tests() {
+  describe("startest/expect", [
+    describe("string_to_not_end_with", [
+      describe("given a string that does not end with the expected pattern", [
+        it_passes(fn() {
+          "Purpose Robot"
+          |> expect.string_to_not_end_with("bottle")
+        }),
+      ]),
+      describe("given a string that ends with the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_not_end_with given matching string",
+          fn() {
+            "Ants in my Eyes Johnson"
+            |> expect.string_to_not_end_with("son")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn list_to_contain_tests() {
   describe("startest/expect", [
     describe("list_to_contain", [
