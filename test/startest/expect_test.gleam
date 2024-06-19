@@ -161,6 +161,28 @@ pub fn to_be_none_tests() {
   ])
 }
 
+pub fn string_to_not_be_blank_tests() {
+  describe("startest/expect", [
+    describe("string_to_not_be_blank", [
+      describe("given a string that is neither empty nor whitespace-only", [
+        it_passes(fn() { expect.string_to_not_be_blank("Gunter") }),
+      ]),
+      describe("given a string that is empty", [
+        it_fails_matching_snapshot(
+          "expect/string_to_not_be_blank given empty string",
+          fn() { expect.string_to_not_be_blank("") },
+        ),
+      ]),
+      describe("given a string that consists only of whitespace characters", [
+        it_fails_matching_snapshot(
+          "expect/string_to_not_be_blank given whitespace-only string",
+          fn() { expect.string_to_not_be_blank("\t \n ") },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn string_to_contain_tests() {
   describe("startest/expect", [
     describe("string_to_contain", [
