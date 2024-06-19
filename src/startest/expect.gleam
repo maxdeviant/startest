@@ -113,7 +113,8 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
   }
 }
 
-/// Asserts that the given string is neither empty nor consists only of whitespace characters.
+/// Asserts that the given string is neither empty nor consists only of
+/// whitespace characters.
 pub fn string_to_not_be_blank(actual: String) -> Nil {
   case actual |> string.trim() |> string.is_empty() {
     False -> Nil
