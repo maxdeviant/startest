@@ -113,6 +113,20 @@ pub fn to_be_none(actual: Option(a)) -> Nil {
   }
 }
 
+/// Asserts that the given string is empty or consists only of whitespace characters.
+pub fn string_to_be_blank(actual: String) -> Nil {
+  case actual |> string.trim() |> string.is_empty() {
+    True -> Nil
+    False ->
+      AssertionError(
+        string.concat(["Expected ", string.inspect(actual), " to be blank"]),
+        actual,
+        "empty or whitespace-only string",
+      )
+      |> assertion_error.raise
+  }
+}
+
 /// Asserts that the given string contains the expected string.
 pub fn string_to_contain(actual: String, expected: String) -> Nil {
   case string.contains(does: actual, contain: expected) {
