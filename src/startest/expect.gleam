@@ -170,6 +170,25 @@ pub fn string_to_start_with(actual: String, expected: String) -> Nil {
   }
 }
 
+/// Asserts that the given string does not start with the expected string.
+pub fn string_to_not_start_with(actual: String, expected: String) -> Nil {
+  case string.starts_with(actual, expected) {
+    False -> Nil
+    True ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to not start with ",
+          string.inspect(expected),
+        ]),
+        actual,
+        expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
 /// Asserts that the given string ends with the expected string.
 pub fn string_to_end_with(actual: String, expected: String) -> Nil {
   case string.ends_with(actual, expected) {
