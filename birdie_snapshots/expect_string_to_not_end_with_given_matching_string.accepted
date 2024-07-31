@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/string_to_not_end_with given matching string
+---
+Expected "Ants in my Eyes Johnson" to not end with "son"
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- son[39m
+[31m+ Ants in my Eyes Johnson[39m

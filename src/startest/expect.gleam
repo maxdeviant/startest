@@ -208,6 +208,25 @@ pub fn string_to_end_with(actual: String, expected: String) -> Nil {
   }
 }
 
+/// Asserts that the given string does not end with the expected string.
+pub fn string_to_not_end_with(actual: String, expected: String) -> Nil {
+  case string.ends_with(actual, expected) {
+    False -> Nil
+    True ->
+      AssertionError(
+        string.concat([
+          "Expected ",
+          string.inspect(actual),
+          " to not end with ",
+          string.inspect(expected),
+        ]),
+        actual,
+        expected,
+      )
+      |> assertion_error.raise
+  }
+}
+
 /// Asserts that the given list contains the expected element.
 pub fn list_to_contain(actual: List(a), expected: a) -> Nil {
   case list.contains(actual, expected) {

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `expect/string_to_not_start_with` for asserting that a string does not start with another string.
+- Added `expect/string_to_not_end_with` for asserting that a string does not end with another string.
 
 ## [0.4.0] - 2024-06-14
 
