@@ -227,6 +227,28 @@ pub fn string_to_start_with_tests() {
   ])
 }
 
+pub fn string_to_not_start_with_tests() {
+  describe("startest/expect", [
+    describe("string_to_not_start_with", [
+      describe("given a string that does not start with the expected pattern", [
+        it_passes(fn() {
+          "Evil Morty"
+          |> expect.string_to_not_start_with("Cult Leader Morty")
+        }),
+      ]),
+      describe("given a string that starts with the expected pattern", [
+        it_fails_matching_snapshot(
+          "expect/string_to_not_start_with given matching string",
+          fn() {
+            "Pickle Rick"
+            |> expect.string_to_not_start_with("Pickle")
+          },
+        ),
+      ]),
+    ]),
+  ])
+}
+
 pub fn string_to_end_with_tests() {
   describe("startest/expect", [
     describe("string_to_end_with", [

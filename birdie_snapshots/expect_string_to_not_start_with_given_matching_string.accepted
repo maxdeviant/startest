@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/string_to_not_start_with given matching string
+---
+Expected "Pickle Rick" to not start with "Pickle"
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Pickle[39m
+[31m+ Pickle Rick[39m
