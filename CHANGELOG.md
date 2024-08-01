@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `expect/string_to_be_blank` for asserting that a string is empty or consists only of whitespace characters.
+
 ## [0.5.0] - 2024-07-31
 
 ### Added
