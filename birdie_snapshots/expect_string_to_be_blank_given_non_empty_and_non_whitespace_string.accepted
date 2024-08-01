@@ -1,0 +1,11 @@
+---
+version: 1.1.5
+title: expect/string_to_be_blank given non-empty and non-whitespace string
+---
+Expected "Birdperson" to be blank
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- empty or whitespace-only string[39m
+[31m+ Birdperson[39m
