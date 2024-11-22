@@ -43,7 +43,7 @@ pub type TestSourceFile {
 pub fn locate_test_files(ctx: Context) -> Result(List(TestSourceFile), Nil) {
   use test_files <- try(
     simplifile.get_files(in: "test")
-    |> result.nil_error,
+    |> result.replace_error(Nil),
   )
 
   test_files

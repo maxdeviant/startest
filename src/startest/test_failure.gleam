@@ -57,7 +57,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
       use dict <- try(
         err
         |> dynamic.dict(dynamic.dynamic, dynamic.dynamic)
-        |> result.nil_error,
+        |> result.replace_error(Nil),
       )
 
       use module <- try(
@@ -66,7 +66,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
         |> result.then(fn(value) {
           value
           |> dynamic.string
-          |> result.nil_error
+          |> result.replace_error(Nil)
         }),
       )
       use function <- try(
@@ -75,7 +75,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
         |> result.then(fn(value) {
           value
           |> dynamic.string
-          |> result.nil_error
+          |> result.replace_error(Nil)
         }),
       )
       use line <- try(
@@ -84,7 +84,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
         |> result.then(fn(value) {
           value
           |> dynamic.int
-          |> result.nil_error
+          |> result.replace_error(Nil)
         }),
       )
       use message <- try(
@@ -93,7 +93,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
         |> result.then(fn(value) {
           value
           |> dynamic.string
-          |> result.nil_error
+          |> result.replace_error(Nil)
         }),
       )
 
@@ -103,22 +103,22 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
       use module <- try(
         err
         |> dynamic.field("module", dynamic.string)
-        |> result.nil_error,
+        |> result.replace_error(Nil),
       )
       use function <- try(
         err
         |> dynamic.field("fn", dynamic.string)
-        |> result.nil_error,
+        |> result.replace_error(Nil),
       )
       use line <- try(
         err
         |> dynamic.field("line", dynamic.int)
-        |> result.nil_error,
+        |> result.replace_error(Nil),
       )
       use message <- try(
         err
         |> dynamic.field("message", dynamic.string)
-        |> result.nil_error,
+        |> result.replace_error(Nil),
       )
 
       Ok(PanicInfo(module, function, line, message))
