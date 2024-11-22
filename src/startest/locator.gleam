@@ -126,7 +126,7 @@ fn identify_tests_in_file(
       })
     })
 
-  let tests = list.concat([test_suites, standalone_tests])
+  let tests = list.flatten([test_suites, standalone_tests])
 
   case tests {
     [] -> Error(Nil)
