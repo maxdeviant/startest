@@ -1,5 +1,5 @@
 import gleam/option.{type Option}
-import gleam/regex.{type Regex}
+import gleam/regexp.{type Regexp}
 import startest/reporters.{type Reporter}
 
 pub type Config {
@@ -10,11 +10,11 @@ pub type Config {
     ///
     /// If a function's name matches the pattern it will be evaluated and expected
     /// to return a `TestTree` (like the ones returned by `describe` or `it`).
-    discover_describe_tests_pattern: Regex,
+    discover_describe_tests_pattern: Regexp,
     /// The pattern to use when discovering tests defined using standalone functions.
     ///
     /// If a function's name matches the pattern it will be run as a test.
-    discover_standalone_tests_pattern: Regex,
+    discover_standalone_tests_pattern: Regexp,
     /// The list of test filepath filters.
     ///
     /// Each filter is matched against a test file's path to determine whether the
@@ -33,7 +33,7 @@ pub fn with_reporters(config: Config, reporters: List(Reporter)) -> Config {
 /// Updates the given `Config` with the specified `discover_describe_tests_pattern`.
 pub fn with_discover_describe_tests_pattern(
   config: Config,
-  discover_describe_tests_pattern: Regex,
+  discover_describe_tests_pattern: Regexp,
 ) -> Config {
   Config(
     ..config,
@@ -44,7 +44,7 @@ pub fn with_discover_describe_tests_pattern(
 /// Updates the given `Config` with the specified `discover_standalone_tests_pattern`.
 pub fn with_discover_standalone_tests_pattern(
   config: Config,
-  discover_standalone_tests_pattern: Regex,
+  discover_standalone_tests_pattern: Regexp,
 ) -> Config {
   Config(
     ..config,
