@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- The `discover_describe_tests_pattern` and `discover_standalone_tests_pattern`
+  fields of the `config.Config` variant are now of type `Regexp` (from the
+  `gleam_regexp` package) instead of the deprecated `Regex`.
+- The `config.with_discover_describe_tests_pattern` function now takes a
+  `Regexp` (from the `gleam_regexp` package) as input instead of a `Regex`.
+- The `config.with_discover_standalone_tests_pattern` function now takes a
+  `Regexp` (from the `gleam_regexp` package) as input instead of a `Regex`.
+
 ## [0.5.1] - 2024-11-21
 
 ### Changed
