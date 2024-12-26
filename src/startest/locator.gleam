@@ -3,7 +3,7 @@ import birl
 import birl/duration.{type Duration}
 import gleam/dynamic.{type Dynamic}
 import gleam/list
-import gleam/regex
+import gleam/regexp
 import gleam/result.{try}
 import gleam/string
 import simplifile
@@ -147,10 +147,10 @@ fn identify_tests_in_file(
 
 fn is_standalone_test(test_function: TestFunction, ctx: Context) -> Bool {
   test_function.name
-  |> regex.check(with: ctx.config.discover_standalone_tests_pattern)
+  |> regexp.check(with: ctx.config.discover_standalone_tests_pattern)
 }
 
 fn is_test_suite(test_function: TestFunction, ctx: Context) -> Bool {
   test_function.name
-  |> regex.check(with: ctx.config.discover_describe_tests_pattern)
+  |> regexp.check(with: ctx.config.discover_describe_tests_pattern)
 }
