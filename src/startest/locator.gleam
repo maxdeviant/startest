@@ -3,7 +3,7 @@ import birl
 import birl/duration.{type Duration}
 import gleam/dynamic.{type Dynamic}
 import gleam/list
-import gleam/regex
+import gleam/regexp as regex
 import gleam/result.{try}
 import gleam/string
 import simplifile

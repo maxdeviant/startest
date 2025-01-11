@@ -1,5 +1,5 @@
 import gleam/option.{None}
-import gleam/regex
+import gleam/regexp as regex
 import startest/cli
 import startest/config.{type Config, Config}
 import startest/reporters/default as default_reporter

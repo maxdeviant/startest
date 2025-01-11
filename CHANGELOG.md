@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Switched to `gleam_regexp` instead of `gleam/regex` from `gleam_stdlib`.
+
 ## [0.5.1] - 2024-11-21
 
 ### Changed
