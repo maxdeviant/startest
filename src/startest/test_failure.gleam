@@ -65,7 +65,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
       use module <- try(
         dict
         |> dict.get(unsafe.from(Module))
-        |> result.then(fn(value) {
+        |> result.try(fn(value) {
           value
           |> decode.run(decode.string)
           |> result.replace_error(Nil)
@@ -74,7 +74,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
       use function <- try(
         dict
         |> dict.get(unsafe.from(Function))
-        |> result.then(fn(value) {
+        |> result.try(fn(value) {
           value
           |> decode.run(decode.string)
           |> result.replace_error(Nil)
@@ -83,7 +83,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
       use line <- try(
         dict
         |> dict.get(unsafe.from(Line))
-        |> result.then(fn(value) {
+        |> result.try(fn(value) {
           value
           |> decode.run(decode.int)
           |> result.replace_error(Nil)
@@ -92,7 +92,7 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
       use message <- try(
         dict
         |> dict.get(unsafe.from(Message))
-        |> result.then(fn(value) {
+        |> result.try(fn(value) {
           value
           |> decode.run(decode.string)
           |> result.replace_error(Nil)
