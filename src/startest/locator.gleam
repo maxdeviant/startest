@@ -10,7 +10,7 @@ import simplifile
 import startest/context.{type Context}
 import startest/internal/unsafe
 import startest/logger
-import startest/test_case.{type Test, Test}
+import startest/test_case.{Test}
 import startest/test_tree.{type TestTree, decode_test_tree}
 
 /// A file that contains tests.

@@ -3,7 +3,7 @@ import gleam/regexp as regex
 import startest/cli
 import startest/config.{type Config, Config}
 import startest/reporters/default as default_reporter
-import startest/test_case.{type Test, Test}
+import startest/test_case.{Test}
 import startest/test_tree.{type TestTree, Suite}
 
 /// Defines a new test suite with the given name.

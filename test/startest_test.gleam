@@ -1,6 +1,5 @@
 import startest.{describe, it, xit}
 import startest/expect
-import startest/test_case.{Test}
 import startest/test_tree
 
 pub fn main() {
