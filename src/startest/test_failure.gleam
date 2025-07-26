@@ -1,11 +1,13 @@
 import exception.{type Exception}
 import gleam/dict
 import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/result.{try}
 import gleam/string
 import startest/assertion_error.{
   type RescuedAssertionError, RescuedAssertionError,
 }
+import startest/internal/unsafe
 
 pub type TestFailure {
   AssertionError(RescuedAssertionError)
@@ -56,43 +58,43 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
     "Dict" -> {
       use dict <- try(
         err
-        |> dynamic.dict(dynamic.dynamic, dynamic.dynamic)
+        |> decode.run(decode.dict(decode.dynamic, decode.dynamic))
         |> result.replace_error(Nil),
       )
 
       use module <- try(
         dict
-        |> dict.get(dynamic.from(Module))
+        |> dict.get(unsafe.from(Module))
         |> result.then(fn(value) {
           value
-          |> dynamic.string
+          |> decode.run(decode.string)
           |> result.replace_error(Nil)
         }),
       )
       use function <- try(
         dict
-        |> dict.get(dynamic.from(Function))
+        |> dict.get(unsafe.from(Function))
         |> result.then(fn(value) {
           value
-          |> dynamic.string
+          |> decode.run(decode.string)
           |> result.replace_error(Nil)
         }),
       )
       use line <- try(
         dict
-        |> dict.get(dynamic.from(Line))
+        |> dict.get(unsafe.from(Line))
         |> result.then(fn(value) {
           value
-          |> dynamic.int
+          |> decode.run(decode.int)
           |> result.replace_error(Nil)
         }),
       )
       use message <- try(
         dict
-        |> dict.get(dynamic.from(Message))
+        |> dict.get(unsafe.from(Message))
         |> result.then(fn(value) {
           value
-          |> dynamic.string
+          |> decode.run(decode.string)
           |> result.replace_error(Nil)
         }),
       )
@@ -102,22 +104,22 @@ fn try_decode_panic_info(exception: Exception) -> Result(PanicInfo, Nil) {
     "Object" -> {
       use module <- try(
         err
-        |> dynamic.field("module", dynamic.string)
+        |> decode.run(decode.field("module", decode.string, decode.success))
         |> result.replace_error(Nil),
       )
       use function <- try(
         err
-        |> dynamic.field("fn", dynamic.string)
+        |> decode.run(decode.field("fn", decode.string, decode.success))
         |> result.replace_error(Nil),
       )
       use line <- try(
         err
-        |> dynamic.field("line", dynamic.int)
+        |> decode.run(decode.field("line", decode.int, decode.success))
         |> result.replace_error(Nil),
       )
       use message <- try(
         err
-        |> dynamic.field("message", dynamic.string)
+        |> decode.run(decode.field("message", decode.string, decode.success))
         |> result.replace_error(Nil),
       )
 

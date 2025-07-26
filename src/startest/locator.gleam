@@ -2,6 +2,7 @@ import bigben/clock
 import birl
 import birl/duration.{type Duration}
 import gleam/dynamic.{type Dynamic}
+import gleam/dynamic/decode
 import gleam/list
 import gleam/regexp as regex
 import gleam/result.{try}
@@ -11,7 +12,7 @@ import startest/context.{type Context}
 import startest/internal/unsafe
 import startest/logger
 import startest/test_case.{Test}
-import startest/test_tree.{type TestTree, decode_test_tree}
+import startest/test_tree.{type TestTree, test_tree_decoder}
 
 /// A file that contains tests.
 pub type TestFile {
@@ -106,7 +107,7 @@ fn identify_tests_in_file(
     |> list.map(fn(test_function) {
       let function: fn() -> Nil =
         test_function.body
-        |> dynamic.from
+        |> unsafe.from
         |> unsafe.coerce
 
       Test(test_function.name, function, False)
@@ -120,7 +121,7 @@ fn identify_tests_in_file(
     test_suites
     |> list.filter_map(fn(test_function) {
       test_function.body()
-      |> decode_test_tree
+      |> decode.run(test_tree_decoder())
       |> result.map_error(fn(error) {
         logger.error(ctx.logger, string.inspect(error))
       })
