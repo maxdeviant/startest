@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: erlef/setup-beam@v1.18.2
+      - uses: erlef/setup-beam@v1.20.4
         with:
-          otp-version: "26.0.2"
-          gleam-version: "1.5.1"
+          otp-version: "28.0"
+          gleam-version: "1.11"
           rebar3-version: "3"
       - run: gleam format --check src test
       - run: gleam deps download

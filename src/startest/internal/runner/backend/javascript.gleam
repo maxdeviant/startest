@@ -30,11 +30,17 @@ pub fn run_tests(ctx: Context) -> Promise(Nil) {
 
       get_exports(js_module_path)
       |> promise.map(array.to_list)
-      |> promise.map(list.map(_, fn(export) {
-        let #(name, body) = export
+      |> promise.map(
+        list.map(_, fn(export) {
+          let #(name, body) = export
 
-        TestFunction(module_name: test_file.module_name, name: name, body: body)
-      }))
+          TestFunction(
+            module_name: test_file.module_name,
+            name: name,
+            body: body,
+          )
+        }),
+      )
       |> promise.map(fn(tests) { TestSourceFile(..test_file, tests: tests) })
     })
     |> promise.await_list
