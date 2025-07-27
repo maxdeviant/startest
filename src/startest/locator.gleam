@@ -1,12 +1,12 @@
 import bigben/clock
-import birl
-import birl/duration.{type Duration}
 import gleam/dynamic.{type Dynamic}
 import gleam/dynamic/decode
 import gleam/list
 import gleam/regexp as regex
 import gleam/result.{try}
 import gleam/string
+import gleam/time/duration.{type Duration}
+import gleam/time/timestamp
 import simplifile
 import startest/context.{type Context}
 import startest/internal/unsafe
@@ -133,8 +133,8 @@ fn identify_tests_in_file(
     [] -> Error(Nil)
     tests -> {
       let collect_duration =
-        clock.now(ctx.clock)
-        |> birl.difference(started_at)
+        started_at
+        |> timestamp.difference(clock.now(ctx.clock))
 
       Ok(TestFile(
         module_name: test_file.module_name,

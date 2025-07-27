@@ -1,11 +1,11 @@
 import bigben/clock
-import birl
-import birl/duration.{type Duration}
 import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
-import gleam/result
 import gleam/string
+import gleam/time/calendar
+import gleam/time/duration.{type Duration}
+import gleam/time/timestamp
 import gleam_community/ansi
 import startest/context.{type Context}
 import startest/locator.{type TestFile}
@@ -59,8 +59,8 @@ pub fn report_summary(
   }
 
   let total_duration =
-    clock.now(ctx.clock)
-    |> birl.difference(ctx.started_at)
+    ctx.started_at
+    |> timestamp.difference(clock.now(ctx.clock))
 
   let passed_tests = case passed_test_count {
     0 -> None
@@ -81,17 +81,9 @@ pub fn report_summary(
     |> list.filter_map(option.to_result(_, Nil))
     |> string.join(" | ")
 
-  let started_at =
-    ctx.started_at
-    |> birl.set_offset(
-      birl.now()
-      |> birl.get_offset,
-    )
-    |> result.unwrap(ctx.started_at)
-
   let total_collect_duration =
     test_files
-    |> list.fold(duration.micro_seconds(0), fn(acc, test_file) {
+    |> list.fold(duration.nanoseconds(0), fn(acc, test_file) {
       duration.add(acc, test_file.collect_duration)
     })
 
@@ -109,9 +101,9 @@ pub fn report_summary(
     ctx.logger,
     label("Started at: ")
       <> {
-      started_at
-      |> birl.to_naive_time_string
-      |> string.slice(0, string.length("HH:MM:SS"))
+      ctx.started_at
+      |> timestamp.to_rfc3339(calendar.local_offset())
+      |> string.slice(string.length("YYYY-MM-DDT"), string.length("HH:MM:SS"))
     },
   )
   logger.log(
@@ -133,25 +125,39 @@ pub fn report_summary(
   )
 }
 
-fn duration_to_string(duration: duration.Duration) -> String {
-  let parts = duration.decompose(duration)
+fn duration_to_string(duration: Duration) -> String {
+  let DurationComponents(minutes, seconds, milliseconds, microseconds) =
+    decompose_duration(duration)
 
-  case parts {
-    [#(microseconds, duration.MicroSecond)] ->
-      int.to_string(microseconds) <> "µs"
-    [#(milliseconds, duration.MilliSecond), #(_, duration.MicroSecond)] ->
-      int.to_string(milliseconds) <> "ms"
-    [
-      #(seconds, duration.Second),
-      #(_, duration.MilliSecond),
-      #(_, duration.MicroSecond),
-    ] -> int.to_string(seconds) <> "s"
-    [
-      #(minutes, duration.Minute),
-      #(_, duration.Second),
-      #(_, duration.MilliSecond),
-      #(_, duration.MicroSecond),
-    ] -> int.to_string(minutes) <> "m"
-    _ -> "too long"
+  case True {
+    _ if minutes > 0 -> int.to_string(minutes) <> "m"
+    _ if seconds > 0 -> int.to_string(seconds) <> "s"
+    _ if milliseconds > 0 -> int.to_string(milliseconds) <> "ms"
+    _ if microseconds > 0 -> int.to_string(microseconds) <> "µs"
+    _ -> "0µs"
   }
+}
+
+type DurationComponents {
+  DurationComponents(
+    minutes: Int,
+    seconds: Int,
+    milliseconds: Int,
+    microseconds: Int,
+  )
+}
+
+fn decompose_duration(duration: Duration) -> DurationComponents {
+  let #(total_seconds, nanoseconds) =
+    duration.to_seconds_and_nanoseconds(duration)
+
+  let minutes = total_seconds / 60
+  let seconds = total_seconds % 60
+
+  let milliseconds = nanoseconds / 1_000_000
+  let remaining_nanoseconds = nanoseconds % 1_000_000
+
+  let microseconds = remaining_nanoseconds / 1000
+
+  DurationComponents(minutes:, seconds:, milliseconds:, microseconds:)
 }
