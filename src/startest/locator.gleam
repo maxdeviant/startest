@@ -133,8 +133,8 @@ fn identify_tests_in_file(
     [] -> Error(Nil)
     tests -> {
       let collect_duration =
-        clock.now(ctx.clock)
-        |> timestamp.difference(started_at, _)
+        started_at
+        |> timestamp.difference(clock.now(ctx.clock))
 
       Ok(TestFile(
         module_name: test_file.module_name,

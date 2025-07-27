@@ -60,8 +60,8 @@ pub fn report_summary(
   }
 
   let total_duration =
-    clock.now(ctx.clock)
-    |> timestamp.difference(ctx.started_at, _)
+    ctx.started_at
+    |> timestamp.difference(clock.now(ctx.clock))
 
   let passed_tests = case passed_test_count {
     0 -> None

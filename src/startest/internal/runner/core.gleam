@@ -24,8 +24,8 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
   // start and when we begin discovering tests, but for now we can just
   // assume that the first thing we do after starting is begin discovery.
   let discovery_duration =
-    clock.now(ctx.clock)
-    |> timestamp.difference(ctx.started_at, _)
+    ctx.started_at
+    |> timestamp.difference(clock.now(ctx.clock))
 
   let tests =
     test_files
@@ -65,8 +65,8 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
     })
 
   let execution_duration =
-    clock.now(ctx.clock)
-    |> timestamp.difference(execution_started_at, _)
+    execution_started_at
+    |> timestamp.difference(clock.now(ctx.clock))
 
   let reporting_started_at = clock.now(ctx.clock)
 
@@ -82,8 +82,8 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
   })
 
   let reporting_duration =
-    clock.now(ctx.clock)
-    |> timestamp.difference(reporting_started_at, _)
+    reporting_started_at
+    |> timestamp.difference(clock.now(ctx.clock))
 
   let skipped_tests =
     executed_tests
