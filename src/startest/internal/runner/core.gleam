@@ -1,11 +1,11 @@
 //// The core test runner implementation.
 
 import bigben/clock
-import birl
 import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
+import gleam/time/timestamp
 import startest/context.{type Context}
 import startest/internal/process
 import startest/locator.{type TestFile}
@@ -25,7 +25,7 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
   // assume that the first thing we do after starting is begin discovery.
   let discovery_duration =
     clock.now(ctx.clock)
-    |> birl.difference(ctx.started_at)
+    |> timestamp.difference(ctx.started_at, _)
 
   let tests =
     test_files
@@ -66,7 +66,7 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
 
   let execution_duration =
     clock.now(ctx.clock)
-    |> birl.difference(execution_started_at)
+    |> timestamp.difference(execution_started_at, _)
 
   let reporting_started_at = clock.now(ctx.clock)
 
@@ -83,7 +83,7 @@ pub fn run_tests(test_files: List(TestFile), ctx: Context) {
 
   let reporting_duration =
     clock.now(ctx.clock)
-    |> birl.difference(reporting_started_at)
+    |> timestamp.difference(reporting_started_at, _)
 
   let skipped_tests =
     executed_tests

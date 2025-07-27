@@ -6,14 +6,14 @@ repository = { type = "github", user = "maxdeviant", repo = "startest" }
 
 [dependencies]
 argv = ">= 1.0.2 and < 2.0.0"
-bigben = ">= 1.0.1 and < 2.0.0"
-birl = ">= 1.8.0 and < 2.0.0"
+bigben = ">= 2.1.0 and < 3.0.0"
 exception = ">= 2.1.0 and < 3.0.0"
 gleam_community_ansi = ">= 1.4.3 and < 2.0.0"
 gleam_erlang = ">= 1.2.0 and < 2.0.0"
 gleam_javascript = ">= 1.0.0 and < 2.0.0"
 gleam_regexp = ">= 1.1.1 and < 2.0.0"
 gleam_stdlib = ">= 0.62.0 and < 2.0.0"
+gleam_time = ">= 1.4.0 and < 2.0.0"
 glint = ">= 1.2.1 and < 2.0.0"
 simplifile = ">= 2.3.0 and < 3.0.0"
 tom = ">= 2.0.0 and < 3.0.0"
