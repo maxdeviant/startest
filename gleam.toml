@@ -1,5 +1,5 @@
 name = "startest"
-version = "0.7.0"
+version = "0.8.0"
 description = "A testing framework to help you shoot for the stars"
 licenses = ["MIT"]
 repository = { type = "github", user = "maxdeviant", repo = "startest" }
